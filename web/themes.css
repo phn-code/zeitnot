@@ -1,0 +1,74 @@
+/* Each theme is a set of custom properties. style.css only reads these. */
+
+:root,
+[data-theme="paper"] {
+  color-scheme: light;
+  --page: #f4f1e9;
+  --surface: #fbf9f3;
+  --text: #20241e;
+  --muted: #646a60;
+  --faint: #9a9d92;
+  --line: #e2ddd0;
+  --accent: #2c5b45;
+  --accent-ink: #f6f3ec;
+  --orb-glow: rgba(44, 91, 69, 0.38);
+  --sq-light: #ebe3cd;
+  --sq-dark: #9fb08e;
+  --last: rgba(214, 183, 64, 0.42);
+  --hint: rgba(32, 36, 30, 0.2);
+  --gaze: #1f6b4a;
+  --gaze-strength: 0.62;
+  --ghost: #4a4e46;
+  --check: #d63a28;
+  --amber: #b97b12;
+  --red: #c0352a;
+  --card-shadow: rgba(40, 36, 20, 0.22);
+}
+
+[data-theme="slate"] {
+  color-scheme: dark;
+  --page: #262c33;
+  --surface: #2e353e;
+  --text: #ebeff4;
+  --muted: #a6b0bc;
+  --faint: #6f7a86;
+  --line: #39414c;
+  --accent: #ffffff;
+  --accent-ink: #1e242a;
+  --orb-glow: rgba(255, 255, 255, 0.32);
+  --sq-light: #c3ced8;
+  --sq-dark: #6c7e90;
+  --last: rgba(255, 255, 255, 0.3);
+  --hint: rgba(20, 26, 32, 0.24);
+  --gaze: #ffffff;
+  --gaze-strength: 0.75;
+  --ghost: #1d2329;
+  --check: #ff4d3a;
+  --amber: #e6a23c;
+  --red: #ff6b5b;
+  --card-shadow: rgba(0, 0, 0, 0.45);
+}
+
+[data-theme="night"] {
+  color-scheme: dark;
+  --page: #0c0c10;
+  --surface: #15151c;
+  --text: #ece9f6;
+  --muted: #9a96b0;
+  --faint: #5d5a72;
+  --line: #24232e;
+  --accent: #a78bfa;
+  --accent-ink: #120f1d;
+  --orb-glow: rgba(167, 139, 250, 0.55);
+  --sq-light: #7a7886;
+  --sq-dark: #514f5c;
+  --last: rgba(167, 139, 250, 0.32);
+  --hint: rgba(10, 8, 18, 0.32);
+  --gaze: #c4b2ff;
+  --gaze-strength: 0.7;
+  --ghost: #dcd9e8;
+  --check: #ff4d6a;
+  --amber: #f0b44c;
+  --red: #ff5f73;
+  --card-shadow: rgba(0, 0, 0, 0.6);
+}
