@@ -1,0 +1,129 @@
+{
+ "model_color": "black",
+ "moves": 8,
+ "final_fen": "r1bqkb1r/pp2pppp/2np1n2/2p5/4P3/2P2N2/PPQP1PPP/RNB1KB1R w KQkq - 3 5",
+ "plies": [
+  {
+   "ply": 0,
+   "move_no": 1,
+   "side": "you",
+   "san": "e4",
+   "best": "e4",
+   "loss": 0.1,
+   "white_win": 52.9
+  },
+  {
+   "ply": 1,
+   "move_no": 1,
+   "side": "model",
+   "san": "c5",
+   "best": "e5",
+   "loss": 0.7,
+   "white_win": 53.7,
+   "difficulty": "easy",
+   "blunder_chance": null,
+   "rated_by": "20 legal moves",
+   "level": "low",
+   "budget_ms": 5939,
+   "elapsed_ms": 4421,
+   "source": "model",
+   "ponder_hit": false,
+   "roles": [
+    "main"
+   ],
+   "decision": "The model chose c5."
+  },
+  {
+   "ply": 2,
+   "move_no": 2,
+   "side": "you",
+   "san": "Nf3",
+   "best": "Nf3",
+   "loss": 0.4,
+   "white_win": 53.3
+  },
+  {
+   "ply": 3,
+   "move_no": 2,
+   "side": "model",
+   "san": "d6",
+   "best": "Nc6",
+   "loss": 1.0,
+   "white_win": 54.3,
+   "difficulty": "easy",
+   "blunder_chance": null,
+   "rated_by": "22 legal moves",
+   "level": "low",
+   "budget_ms": 6033,
+   "elapsed_ms": 1662,
+   "source": "model",
+   "ponder_hit": true,
+   "roles": [
+    "ponder"
+   ],
+   "decision": "You played Nf3 as expected, so the prepared d6 plays at once."
+  },
+  {
+   "ply": 4,
+   "move_no": 3,
+   "side": "you",
+   "san": "c3",
+   "best": "d4",
+   "loss": 4.5,
+   "white_win": 49.8
+  },
+  {
+   "ply": 5,
+   "move_no": 3,
+   "side": "model",
+   "san": "Nf6",
+   "best": "Nf6",
+   "loss": 0.9,
+   "white_win": 50.7,
+   "difficulty": "normal",
+   "blunder_chance": null,
+   "rated_by": "29 legal moves",
+   "level": "medium",
+   "budget_ms": 10292,
+   "elapsed_ms": 7557,
+   "source": "model",
+   "ponder_hit": false,
+   "roles": [
+    "main",
+    "backup"
+   ],
+   "decision": "The model chose Nf6."
+  },
+  {
+   "ply": 6,
+   "move_no": 4,
+   "side": "you",
+   "san": "Qc2",
+   "best": "Be2",
+   "loss": 1.4,
+   "white_win": 49.4
+  },
+  {
+   "ply": 7,
+   "move_no": 4,
+   "side": "model",
+   "san": "Nc6",
+   "best": "Qc7",
+   "loss": 2.2,
+   "white_win": 51.6,
+   "difficulty": "normal",
+   "blunder_chance": null,
+   "rated_by": "32 legal moves",
+   "level": "medium",
+   "budget_ms": 10381,
+   "elapsed_ms": 5754,
+   "source": "model",
+   "ponder_hit": false,
+   "roles": [
+    "main",
+    "backup"
+   ],
+   "decision": "The model chose Nc6."
+  }
+ ]
+}

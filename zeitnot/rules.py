@@ -1,15 +1,10 @@
-"""Chess rules the harness needs without an engine: replay, prompt text, one-ply safety, the emergency move."""
+"""Chess rules the harness needs without an engine: replay, one-ply safety, hanging pieces and the rules check."""
 
 from collections.abc import Sequence
 
 import chess
 
 VALUE = {chess.PAWN: 1, chess.KNIGHT: 3, chess.BISHOP: 3, chess.ROOK: 5, chess.QUEEN: 9, chess.KING: 100}
-
-INSTRUCTIONS = (
-    "You are a strong chess player. Check every capture, check and threat for both sides, "
-    "then choose the best move for the side to move."
-)
 
 
 class IllegalHistory(ValueError):
@@ -24,29 +19,6 @@ def board_from_moves(moves: Sequence[str]) -> chess.Board:
         except ValueError as e:
             raise IllegalHistory(f"move {i + 1} ({uci!r}) is not legal: {e}") from e
     return board
-
-
-def _diagram(board: chess.Board) -> str:
-    rows = []
-    for rank in range(7, -1, -1):
-        cells = []
-        for file in range(8):
-            piece = board.piece_at(chess.square(file, rank))
-            cells.append(piece.symbol() if piece else ".")
-        rows.append(f"{rank + 1} " + " ".join(cells))
-    rows.append("  a b c d e f g h")
-    return "\n".join(rows)
-
-
-def render(board: chess.Board, choices: Sequence[str], label: str = "Legal moves") -> str:
-    side = "White" if board.turn == chess.WHITE else "Black"
-    movetext = chess.Board().variation_san(board.move_stack) or "(none)"
-    return (
-        f"Chess position (FEN): {board.fen()}\n\n"
-        f"Board (uppercase is White, lowercase is Black):\n{_diagram(board)}\n\n"
-        f"Moves so far: {movetext}\n\n{side} to move.\n\n"
-        f"{label}: {', '.join(choices)}"
-    )
 
 
 def is_safe(board: chess.Board, move: chess.Move) -> bool:
@@ -71,5 +43,39 @@ def safe_moves(board: chess.Board) -> list[chess.Move]:
     return [m for m in legal if is_safe(board, m)] or legal
 
 
-def emergency_move(board: chess.Board) -> chess.Move:
-    return safe_moves(board)[0]
+def hanging(board: chess.Board, color: chess.Color) -> list[chess.Square]:
+    """Squares of `color`'s pieces, king excluded, that are attacked and undefended or attacked by a cheaper piece."""
+    out = []
+    for sq, piece in board.piece_map().items():
+        if piece.color != color or piece.piece_type == chess.KING:
+            continue
+        attackers = board.attackers(not color, sq)
+        if not attackers:
+            continue
+        cheapest = min(VALUE[board.piece_type_at(a)] for a in attackers)
+        if not board.attackers(color, sq) or cheapest < VALUE[piece.piece_type]:
+            out.append(sq)
+    return sorted(out)
+
+
+def describe(board: chess.Board, square: chess.Square) -> str:
+    return f"{chess.piece_name(board.piece_type_at(square))} on {chess.square_name(square)}"
+
+
+def check_move(board: chess.Board, move: chess.Move) -> str | None:
+    """The rules check on an answer. None when it passes, otherwise why it fails.
+
+    It fails when the moved piece is left hanging (is_safe) or another of my pieces becomes hanging. The moved
+    piece is left out of the count so an even trade, which is_safe allows, is not flagged twice.
+    """
+    me = board.turn
+    after = board.copy()
+    after.push(move)
+    if not is_safe(board, move):
+        return f"it leaves the {describe(after, move.to_square)} hanging"
+    before = set(hanging(board, me)) - {move.from_square}
+    now = set(hanging(after, me)) - {move.to_square}
+    if len(now) > len(before):
+        newly = sorted(now - before) or sorted(now)
+        return f"it leaves the {describe(after, newly[0])} hanging"
+    return None

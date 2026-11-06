@@ -1,4 +1,5 @@
-/* Each theme is a set of custom properties. style.css only reads these. */
+/* Each theme is a set of custom properties. style.css only reads these. --branch-1 to 3 colour the calls after
+   the main one, which takes the engine's accent; --opp colours the opponent's moves. */
 
 :root,
 [data-theme="paper"] {
@@ -23,6 +24,14 @@
   --amber: #b97b12;
   --red: #c0352a;
   --card-shadow: rgba(40, 36, 20, 0.22);
+  --engine-claude: #a8681a;
+  --engine-codex: #1d7a78;
+  --engine-gemini: #3a5bc7;
+  --engine-fake: #5f6b5a;
+  --branch-1: #3d6fb0;
+  --branch-2: #b0506a;
+  --branch-3: #7a5bb0;
+  --opp: #7b8794;
 }
 
 [data-theme="slate"] {
@@ -47,6 +56,14 @@
   --amber: #e6a23c;
   --red: #ff6b5b;
   --card-shadow: rgba(0, 0, 0, 0.45);
+  --engine-claude: #f0b865;
+  --engine-codex: #6fd6cb;
+  --engine-gemini: #9db4ff;
+  --engine-fake: #ffffff;
+  --branch-1: #8fb8ff;
+  --branch-2: #f59fb0;
+  --branch-3: #c5b3ff;
+  --opp: #dfe5ec;
 }
 
 [data-theme="night"] {
@@ -71,4 +88,12 @@
   --amber: #f0b44c;
   --red: #ff5f73;
   --card-shadow: rgba(0, 0, 0, 0.6);
+  --engine-claude: #f2bb68;
+  --engine-codex: #62d9cc;
+  --engine-gemini: #9aaeff;
+  --engine-fake: #a78bfa;
+  --branch-1: #7cc4ff;
+  --branch-2: #ff8fb1;
+  --branch-3: #e8cf7a;
+  --opp: #dcd8ea;
 }

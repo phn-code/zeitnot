@@ -25,7 +25,7 @@ def main() -> None:
     url = f"http://127.0.0.1:{args.port}"
     if not args.no_browser:
         threading.Timer(1.0, webbrowser.open, args=(url,)).start()
-    print(f"zeitnot on {url} ({'fake model' if settings.fake else 'Gemini'})")
+    print(f"zeitnot on {url}")
     uvicorn.run(app, host="127.0.0.1", port=args.port, log_level="warning")
 
 

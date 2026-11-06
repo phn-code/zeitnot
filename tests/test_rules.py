@@ -1,7 +1,7 @@
 import chess
 import pytest
 
-from zeitnot.rules import IllegalHistory, board_from_moves, emergency_move, render, safe_moves
+from zeitnot.rules import IllegalHistory, board_from_moves, safe_moves
 
 START = chess.Board()
 
@@ -59,16 +59,3 @@ def test_safe_moves_falls_back_to_all_legal_moves_when_none_pass():
 def test_safe_moves_is_a_fixed_order():
     uci = [m.uci() for m in safe_moves(START)]
     assert uci == sorted(uci) and len(uci) == 20
-
-
-def test_emergency_move_is_first_safe_move():
-    board = chess.Board("4k3/8/8/3p4/8/8/8/3QK3 w - - 0 1")
-    assert emergency_move(board) == safe_moves(board)[0]
-    assert emergency_move(START).uci() == "a2a3"
-
-
-def test_render_lists_choices_and_history():
-    board = board_from_moves(["e2e4", "e7e5"])
-    text = render(board, ["Nf3", "Nc3"])
-    assert "1. e4 e5" in text and "White to move." in text and "Legal moves: Nf3, Nc3" in text
-    assert "(none)" in render(START, ["e4"])

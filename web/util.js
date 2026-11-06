@@ -41,8 +41,19 @@ export function formatSeconds(ms) {
   return `${(ms / 1000).toFixed(1)} s`;
 }
 
-export function formatUsd(usd) {
-  return usd >= 0.1 ? `$${usd.toFixed(2)}` : `$${Number(usd.toFixed(4))}`;
+/** The middle value in ms, or null for no values. */
+export function median(values) {
+  if (!values.length) return null;
+  const sorted = [...values].sort((a, b) => a - b);
+  const mid = sorted.length >> 1;
+  return Math.round(sorted.length % 2 ? sorted[mid] : (sorted[mid - 1] + sorted[mid]) / 2);
+}
+
+export const sum = (values) => values.reduce((total, v) => total + v, 0);
+
+/** "48.2 s" under a minute, "3:05" from a minute on. */
+export function totalTime(ms) {
+  return ms >= 60_000 ? formatClock(ms) : formatSeconds(ms);
 }
 
 export function moveLabel(ply, san) {
@@ -50,12 +61,62 @@ export function moveLabel(ply, san) {
   return ply % 2 === 0 ? `${number}. ${san}` : `${number}... ${san}`;
 }
 
-export const LEVEL_LABEL = { medium: "medium", low: "low", minimal: "minimal", none: "fallback only", forced: "forced" };
+// Deepest first: the end card lists the levels a game used in this order.
+export const LEVEL_LABEL = {
+  max: "max",
+  xhigh: "xhigh",
+  high: "high",
+  medium: "medium",
+  low: "low",
+  minimal: "minimal",
+  none: "fallback only",
+  forced: "forced",
+};
 
-export function describePlan({ level, budget_ms }) {
+export function describePlan({ level, budget_ms, difficulty }) {
   const seconds = budget_ms >= 10_000 ? Math.round(budget_ms / 1000) : (budget_ms / 1000).toFixed(1);
   const what = level === "none" ? "fallback only" : `${level} thinking`;
-  return `${what} · ${seconds} s budget`;
+  return `${difficulty ? `${difficulty} · ` : ""}${what} · ${seconds} s budget`;
+}
+
+/** The line under the model's name: "hard · 34% blunder risk · high + xhigh", the second opinion's level last. */
+export function describeSense({ difficulty, blunder_chance: chance, level, second_level: second }) {
+  const risk = chance == null ? "" : ` · ${chance < 0.01 ? "<1%" : `${Math.round(chance * 100)}%`} blunder risk`;
+  const deeper = second && second !== level ? ` + ${LEVEL_LABEL[second] ?? second}` : "";
+  return `${difficulty}${risk} · ${LEVEL_LABEL[level] ?? level}${deeper}`;
+}
+
+/** "On 5+3 it thinks at low, high on hard moves with an xhigh second opinion." from one clock's {easy, normal, hard, second} levels. */
+export function describeRegime(regime, minutes, increment) {
+  if (!regime) return "";
+  const { easy, normal, hard, second } = regime;
+  const article = /^[aeiox]/.test(second ?? "") ? "an" : "a"; // "an xhigh", said "ex-high"
+  const opinion = second && second !== hard ? `${article} ${second} second opinion` : "";
+  const onHard = hard !== normal ? `${hard} on hard moves${opinion ? ` with ${opinion}` : ""}` : opinion ? `with ${opinion} on hard moves` : "";
+  const onEasy = easy !== normal ? `${easy} on easy ones` : "";
+  const extra = [onHard, onEasy].filter(Boolean);
+  if (!extra.length) return `On ${minutes}+${increment} it thinks at ${normal} on every move.`;
+  return `On ${minutes}+${increment} it thinks at ${normal}, ${extra.join(" and ")}.`;
+}
+
+/** The start screen's line under the time control for one opponent from /api/status: its speed and how deep it thinks
+ * on that clock. */
+export function engineHint(engine, minutes, increment) {
+  if (!engine) return "";
+  const regime = describeRegime(engine.regimes?.[`${minutes}+${increment}`], minutes, increment);
+  return [engine.hint, regime].filter(Boolean).join(" ");
+}
+
+/** The time control the start screen picks for an opponent the player has not set one for. */
+export function defaultPreset(engine) {
+  const tc = engine?.time_control;
+  return tc ? { minutes: tc.minutes, increment: tc.increment } : { ...DEFAULT_PRESET };
+}
+
+/** The counter beside the budget ring: "4.2 s of 12 s". */
+export function elapsedText(elapsedMs, budgetMs) {
+  const budget = budgetMs >= 10_000 ? Math.round(budgetMs / 1000) : (budgetMs / 1000).toFixed(1);
+  return `${(Math.max(0, elapsedMs) / 1000).toFixed(1)} s of ${budget} s`;
 }
 
 /** The budget ring: how full it is, and its tone. Amber past the budget, red in the last quarter before the deadline. */
@@ -66,28 +127,6 @@ export function budgetRing(elapsedMs, budgetMs, deadlineMs) {
   return { fraction, tone: elapsedMs < redAt ? "over" : "critical" };
 }
 
-// The first move's plan level per time control, mirroring zeitnot/timeman.py and the p50 latencies in zeitnot/config.py.
-const MAIN_LEVEL_P50_MS = [
-  ["medium", 12_100],
-  ["low", 4_200],
-];
-// Measured cost per move (experiments/p0_probe/FINDINGS.md): the main call plus the minimal fallback call.
-const MOVE_USD = { medium: 0.0091 + 0.0003, low: 0.0026 + 0.0003, none: 0.0003 };
-const MODEL_MOVES_PER_GAME = [30, 50];
-
-export function openingLevel(minutes, increment) {
-  const ms = minutes * 60_000;
-  if (ms < 10_000) return "none";
-  const budget = Math.min(ms / 40 + 0.8 * increment * 1000, 0.25 * ms);
-  return MAIN_LEVEL_P50_MS.find(([, p50]) => p50 <= budget)?.[0] ?? "none";
-}
-
-export function describeCost(minutes, increment) {
-  const perMove = MOVE_USD[openingLevel(minutes, increment)];
-  const [low, high] = MODEL_MOVES_PER_GAME.map((n) => `$${(n * perMove).toFixed(2)}`);
-  return low === high ? `about ${low} per game` : `about ${low} to ${high} per game`;
-}
-
 /** "gemini-3.6-flash" to "Gemini 3.6 Flash". */
 export function modelLabel(id) {
   return id
@@ -96,7 +135,7 @@ export function modelLabel(id) {
     .join(" ");
 }
 
-/** End-card numbers from the model's move records [{level, source, elapsedMs, usd}]. */
+/** End-card numbers from the model's move records [{level, difficulty, source, elapsedMs, ponderHit}]. */
 export function summarize(records) {
   const thinkMs = records.reduce((sum, r) => sum + r.elapsedMs, 0);
   const levels = new Map();
@@ -109,8 +148,8 @@ export function summarize(records) {
       .filter((l) => levels.has(l))
       .map((l) => [LEVEL_LABEL[l], levels.get(l)]),
     fallbacks: records.filter((r) => r.source === "fallback").length,
-    emergencies: records.filter((r) => r.source === "emergency").length,
-    usd: records.reduce((sum, r) => sum + r.usd, 0),
+    prepared: records.filter((r) => r.ponderHit).length,
+    hard: records.filter((r) => r.difficulty === "hard").length,
   };
 }
 

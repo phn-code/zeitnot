@@ -56,3 +56,14 @@ export function resolveMove(token, legalMoves) {
   const pairs = new Set(matches.map((m) => m.from + m.to));
   return pairs.size === 1 ? { from: matches[0].from, to: matches[0].to } : null;
 }
+
+const TOKEN_END = /[\s,.;:!?)\]]/;
+
+/**
+ * Gaze tokens of a growing text that are complete and not yet fired: those after `firedEnd` that are followed by a
+ * space or punctuation, or every one once the text is `closed`. A token at the very end may still grow ("O-O" into
+ * "O-O-O"), so it waits.
+ */
+export function settledTokens(text, firedEnd, closed) {
+  return extractGaze(text).filter((t) => t.start >= firedEnd && (closed || (t.end < text.length && TOKEN_END.test(text[t.end]))));
+}

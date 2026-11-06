@@ -12,8 +12,8 @@
       var saved = null;
       try { saved = JSON.parse(localStorage.getItem("zeitnot.theme")); } catch (e) {}
       var themes = ["paper", "slate", "night"];
-      document.documentElement.dataset.theme = themes.indexOf(saved) >= 0 ? saved
-        : matchMedia("(prefers-color-scheme: dark)").matches ? "night" : "paper";
+      // Paper, the light theme, unless the player picked another one.
+      document.documentElement.dataset.theme = themes.indexOf(saved) >= 0 ? saved : "paper";
     })();
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -47,7 +47,6 @@
     <div id="game-controls" class="game-controls" hidden>
       <button id="resign" type="button" class="quiet">Resign</button>
       <button id="new-game" type="button" class="quiet">New game</button>
-      <span id="cost" class="cost" title="This game, and the total against the spend cap"></span>
     </div>
     <div class="prefs">
       <button id="sound-toggle" type="button" class="icon" aria-label="Sound" aria-pressed="true">
@@ -71,22 +70,28 @@
       <h1 class="wordmark">zeitnot</h1>
       <p class="tagline">Play an LLM that decides when to think.</p>
       <div class="field">
+        <span class="label" id="opponent-label">Opponent</span>
+        <div id="opponents" class="chips" role="group" aria-labelledby="opponent-label"></div>
+        <div id="setup-help" class="setup-help" hidden>
+          <p>No opponent is ready. Set up either one, and it appears here within a minute:</p>
+          <ul id="setup-help-lines"></ul>
+          <p>Until then you can play the free fake demo.</p>
+        </div>
+      </div>
+      <div class="field">
         <span class="label">Time control</span>
         <div id="presets" class="chips"></div>
         <div id="custom" class="custom" hidden>
           <label>Minutes <input id="minutes" type="number" min="0.5" step="0.5" inputmode="decimal"></label>
           <label>Increment, seconds <input id="increment" type="number" min="0" step="1" inputmode="numeric"></label>
         </div>
-        <p id="cost-hint" class="hint"></p>
+        <p id="engine-hint" class="hint"></p>
       </div>
       <div class="field">
         <span class="label">Side</span>
         <div id="sides" class="chips"></div>
       </div>
-      <div class="field">
-        <label class="label" for="model">Model</label>
-        <select id="model" class="model"></select>
-      </div>
+
       <button id="play" type="button" class="primary">Play</button>
       <p class="credits">
         <span>Board <a href="https://github.com/shaack/cm-chessboard">cm-chessboard</a> by Stefan Haack (MIT, markers CC BY-SA 3.0)</span> ·
@@ -116,13 +121,17 @@
             <svg viewBox="0 0 48 48">
               <circle class="ring-track" cx="24" cy="24" r="22"/>
               <circle class="ring-fill" cx="24" cy="24" r="22" pathLength="1"/>
+              <g class="sparks"></g>
             </svg>
             <span class="core"></span>
           </div>
-          <span id="ai-name" class="name"></span>
+          <div class="who">
+            <span id="ai-name" class="name"></span>
+            <span class="sense" aria-live="polite"></span>
+            <span class="elapsed" aria-live="off"></span>
+          </div>
           <span id="ai-clock" class="clock"></span>
         </header>
-        <p class="plan"></p>
         <div class="stream"></div>
         <div class="history"></div>
         <footer class="player">

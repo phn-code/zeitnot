@@ -12,7 +12,7 @@ const MOVE_MS = 220;
 const GLOW_MS = 2500;
 const PULSE_MS = 700;
 const ARROW_FADE_MS = 300;
-const MAX_GAZE_ARROWS = 3;
+const MAX_GAZE_PER_CALL = 2;
 const GHOST_TITLE = "backup move, ready if time runs short";
 
 // cm-chessboard matches marker and arrow types by reference, so each type exists once, here.
@@ -26,11 +26,13 @@ const MARK = {
   gaze: { class: "zn-gaze", slice: "markerSquare" },
   pulse: { class: "zn-pulse", slice: "markerSquare" },
 };
-const ARROW = {
-  gaze: { class: "zn-gaze" },
-  fading: { class: "zn-gaze zn-fading" },
-  ghost: { class: "zn-ghost" },
-};
+// Arrow types by class string, made on first use: "zn-gaze zn-t-b1 zn-c-c12" is a faint gaze arrow in tone b1 for call
+// c12, so each call's arrows can be lit or dimmed together.
+const ARROW_TYPES = new Map();
+function arrowType(cls) {
+  if (!ARROW_TYPES.has(cls)) ARROW_TYPES.set(cls, { class: cls });
+  return ARROW_TYPES.get(cls);
+}
 
 class AfterRedraw extends Extension {
   constructor(chessboard, props) {
@@ -53,8 +55,9 @@ export class Board {
     // Markers and Arrows redraw every element on any change, which restarts CSS animations. Each animated
     // element is tracked here (key -> {selector, at, timer}) so sync() can resume it with a negative delay.
     this.live = new Map();
-    this.gazeIds = []; // "e2e4" ids of the gaze arrows, oldest first
-    this.ghostId = null;
+    this.arrows = new Map(); // "e2e4" -> {type, kind, call}: one arrow per square pair, the latest wins
+    this.focusStyle = document.createElement("style");
+    el.after(this.focusStyle);
     for (const [name, ms] of Object.entries({ move: MOVE_MS, glow: GLOW_MS, pulse: PULSE_MS, fade: ARROW_FADE_MS })) {
       el.style.setProperty(`--zn-${name}-ms`, `${ms}ms`);
     }
@@ -159,43 +162,62 @@ export class Board {
     this.addMark(MARK.pulse, square, PULSE_MS);
   }
 
-  gazeArrow(from, to) {
+  /**
+   * An arrow for one call. `kind` is "gaze" (faint, a move its commentary names, at most two per call, the oldest
+   * fading first), "move" (the call's answer, or the move a ponder card prepares for) or "ghost" (the backup move).
+   * `tone` is the call's colour: b0 to b3, "opp" for the opponent's moves, or "muted".
+   */
+  arrow(from, to, { kind, tone, call }) {
     const id = from + to;
-    if (id === this.ghostId) return;
-    const seen = this.gazeIds.indexOf(id);
-    if (seen >= 0) {
-      this.gazeIds.push(...this.gazeIds.splice(seen, 1));
-      return;
-    }
-    this.removeArrow(ARROW.fading, from, to);
-    this.gazeIds.push(id);
-    this.addArrow(ARROW.gaze, from, to);
-    if (this.gazeIds.length > MAX_GAZE_ARROWS) {
-      const oldest = this.gazeIds.shift();
-      const [f, t] = [oldest.slice(0, 2), oldest.slice(2)];
-      this.removeArrow(ARROW.gaze, f, t);
-      this.addArrow(ARROW.fading, f, t, ARROW_FADE_MS, () => this.removeArrow(ARROW.fading, f, t));
+    const held = this.arrows.get(id);
+    if (held && (held.kind !== "gaze" || kind === "gaze") && held.call === call) return;
+    if (held && held.kind !== "gaze" && kind === "gaze") return;
+    const type = arrowType(`zn-${kind} zn-t-${tone} zn-c-${call}`);
+    if (held) this.removeArrow(held.type, from, to);
+    this.arrows.set(id, { type, kind, call });
+    this.addArrow(type, from, to);
+    if (kind !== "gaze") return;
+    const mine = [...this.arrows].filter(([, a]) => a.kind === "gaze" && a.call === call);
+    if (mine.length > MAX_GAZE_PER_CALL) this.fadeArrow(mine[0][0]);
+  }
+
+  fadeArrow(id) {
+    const held = this.arrows.get(id);
+    if (!held) return;
+    this.arrows.delete(id);
+    const [from, to] = [id.slice(0, 2), id.slice(2, 4)];
+    this.removeArrow(held.type, from, to);
+    const fading = arrowType(`${held.type.class} zn-fading`);
+    this.addArrow(fading, from, to, ARROW_FADE_MS, () => this.removeArrow(fading, from, to));
+  }
+
+  /** Removes the arrows of one call, or of every call when `call` is omitted. */
+  dropArrows(call) {
+    for (const [id, held] of [...this.arrows]) {
+      if (call !== undefined && held.call !== call) continue;
+      this.arrows.delete(id);
+      this.removeArrow(held.type, id.slice(0, 2), id.slice(2, 4));
     }
   }
 
-  ghost(from, to) {
-    this.ghostId = from + to;
-    if (this.gazeIds.includes(this.ghostId)) {
-      this.gazeIds = this.gazeIds.filter((id) => id !== this.ghostId);
-      this.removeArrow(ARROW.gaze, from, to);
-    }
-    this.addArrow(ARROW.ghost, from, to);
+  /** Lights one call's arrows and dims the rest, or clears the focus with null. */
+  focus(call) {
+    const safe = call && /^[\w-]+$/.test(call) ? call : null;
+    this.el.classList.toggle("zn-focused", Boolean(safe));
+    this.focusStyle.textContent = safe ? `.zn-focused .arrow.zn-c-${safe} { opacity: 1 !important; }` : "";
   }
 
   clearGaze() {
     this.removeMark(MARK.gaze);
-    for (const type of [ARROW.gaze, ARROW.fading, ARROW.ghost]) this.removeArrow(type);
-    this.gazeIds = [];
-    this.ghostId = null;
+    this.dropArrows();
+    for (const type of ARROW_TYPES.values()) this.cb.removeArrows(type);
+    this.focus(null);
+    this.sync();
   }
 
   destroy() {
     this.untrack("");
+    this.focusStyle.remove();
     this.cb.destroy();
   }
 
@@ -216,7 +238,7 @@ export class Board {
 
   addArrow(type, from, to, lifetimeMs, onExpire) {
     const id = from + to;
-    this.track(`a:${type.class}@${id}`, `g.arrow.${type.class.replace(" ", ".")}[data-arrow="${id}"]`, lifetimeMs, onExpire);
+    this.track(`a:${type.class}@${id}`, `g.arrow.${type.class.replaceAll(" ", ".")}[data-arrow="${id}"]`, lifetimeMs, onExpire);
     this.cb.addArrow(type, from, to);
     this.sync();
   }

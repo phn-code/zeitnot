@@ -16,7 +16,7 @@ import probe
 PATH = probe.OUT / "gemini_timing.jsonl"
 MODELS = sys.argv[1].split(",") if len(sys.argv) > 1 else ["gemini-3.6-flash", "gemini-3.7-flash", "gemini-3.8-flash"]
 LEVEL = sys.argv[2] if len(sys.argv) > 2 else "medium"
-N_POSITIONS = 10
+N_POSITIONS = int(sys.argv[3]) if len(sys.argv) > 3 else 10
 SPACING_S = 2.0
 USD_IN, USD_OUT = 0.75e-6, 3.75e-6
 

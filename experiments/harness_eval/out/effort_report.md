@@ -1,0 +1,12 @@
+# Effort ladder, Claude Opus
+
+20 critical positions from out/positions.jsonl. Each call is run.py's v2 call with only the level changed. Loss is the drop in win probability against Stockfish 19's best move at depth 16. Blunder means a loss of 30 or more. Intervals are 95% bootstrap intervals of the mean. The paired column is level minus low on the positions both answered (negative is better). Seconds are wall clock per call with the configured number of calls in flight.
+
+The low row is run.py's claude v2 arm, recorded with the `commentary` answer schema. The other rows use today's `commentary+expected_reply` schema, so the paired difference also carries that schema change.
+
+| Level | n | Mean loss (95% CI) | Blunders | vs low, paired (95% CI) | Mean s | p50 s | p90 s | Mean out tokens |
+|---|---|---|---|---|---|---|---|---|
+| low (calls.jsonl v2) | 20 | 11.0 (3.5 to 20.9) | 3 |  | 8.4 | 7.9 | 14.2 | 649 |
+| low | 20 | 10.0 (3.4 to 19.3) | 3 | -1.0 (-7.0 to +3.9), n=20 | 7.9 | 7.9 | 11.7 | 609 |
+| high | 20 | 10.3 (3.4 to 20.0) | 3 | -0.8 (-5.9 to +4.1), n=20 | 18.1 | 17.1 | 40.2 | 1474 |
+| xhigh | 19 | 10.8 (2.7 to 21.6) | 3 | -0.6 (-7.2 to +4.7), n=19 | 39.4 | 20.1 | 117.3 | 3515 |

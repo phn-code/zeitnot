@@ -281,8 +281,9 @@ def win_pct(score: chess.engine.PovScore, turn: chess.Color) -> float:
     return 50 + 50 * (2 / (1 + math.exp(-0.00368208 * cp)) - 1)
 
 
-async def grade(positions: list[dict], records: list[dict], args) -> dict:
-    path = OUT / "grades.json"
+async def grade(positions: list[dict], records: list[dict], args, path: Path | None = None) -> dict:
+    """Stockfish win percentages for every recorded move, cached in `path` (default OUT / "grades.json")."""
+    path = path or OUT / "grades.json"
     grades = json.loads(path.read_text()) if path.exists() else {}
     rng = random.Random(args.seed + 1)
     need: dict[str, set[str]] = {}

@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { extractGaze, resolveMove } from "../../web/gaze.js";
+import { extractGaze, resolveMove, settledTokens } from "../../web/gaze.js";
 
 const brief = (text) => extractGaze(text).map(({ kind, san, square }) => [kind, san, square]);
 
@@ -121,4 +121,18 @@ test("resolveMove rejects ambiguous, illegal and square tokens", () => {
   assert.equal(resolve("O-O-O"), null);
   assert.equal(resolve("Qh5"), null);
   assert.equal(resolve("d4"), null, "a bare square is never resolved");
+});
+
+test("settledTokens fires each token of a streaming text once, after it can no longer grow", () => {
+  const text = "Weighing Nxd5 and O-O-O, then Qf3";
+  let fired = 0;
+  const seen = [];
+  for (let n = 1; n <= text.length; n++) {
+    for (const t of settledTokens(text.slice(0, n), fired, false)) {
+      seen.push(t.san);
+      fired = t.end;
+    }
+  }
+  assert.deepEqual(seen, ["Nxd5", "O-O-O"], "Qf3 at the very end waits, and O-O never fires early");
+  assert.deepEqual(settledTokens(text, fired, true).map((t) => t.san), ["Qf3"]);
 });

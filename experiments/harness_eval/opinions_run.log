@@ -1,0 +1,102 @@
+40 positions: 40 critical, 0 quiet
+gemini spent so far $0.0000 of $1.00
+1 verify calls needed
+claude second g014    6.3s Ba3
+claude second g016    9.4s Qh5
+claude second g020    7.6s Qh5+
+claude second g018   11.1s Nh3
+claude second g022    7.6s Bxg5
+claude second p014    7.6s axb5
+claude second p028    4.8s Qxa6
+claude second p049    9.2s d3
+claude second p064    7.8s Ra5
+claude second p080    7.6s a4
+claude second p085    9.9s Rd4
+claude second p098    8.2s Ng4
+claude second p111    5.9s Nb5
+claude second p120    9.9s Qxa8
+claude second p117   15.8s Qc8+
+claude second p160    5.6s Bxe2
+claude second p196    9.8s Nf6
+claude second p179   12.9s Rxf7
+claude second p002   10.7s Qg2+
+claude second p018   12.7s dxc3
+claude second p020    7.8s Nc4
+claude second p042    7.8s Nc5
+claude second p056    7.5s Qxh2
+claude second p055   11.3s dxc5
+claude second p066   10.6s Rfd8
+claude second p071   10.1s Nxd5
+claude second p088    7.5s e4
+claude second p077    9.4s Qc3
+claude second p099    4.5s cxd4
+claude second p091    9.4s Kg4
+claude second p116    6.2s Bb3
+claude second p121   10.9s Qf4
+claude second p134    9.9s Qa5+
+claude second p151    7.5s Qxa5
+claude second p150   10.0s Bxe5+
+claude second p153    7.3s Kxb7
+claude second p171   10.1s f4
+claude second p191    5.4s dxe4
+claude second p015    5.1s Bxd7+
+claude second p016   11.9s Nc5
+18 of 40 second opinions disagree
+claude escalate g014   13.2s Ba3
+claude escalate g018   13.7s Nf3
+claude escalate g022   13.2s Bxg5
+claude escalate p014   21.3s axb5
+claude escalate p049   13.0s O-O
+claude escalate p080   16.7s a4
+claude escalate p085   16.9s Rd4
+claude escalate p179   17.7s Qf4
+claude escalate p117   25.4s Qc4
+claude escalate p196   16.9s Nf6
+claude escalate p002   26.5s Qg2+
+claude escalate p042   26.1s Qc6
+claude escalate p056   17.6s Qxh2
+claude escalate p071   13.3s Rfc8
+claude escalate p121   14.6s Qf4
+claude escalate p134   17.4s Qa5+
+claude escalate p171   15.7s Kf1
+claude escalate p016   14.4s Re3
+graded 40 positions at depth 16 in 4s
+# Harness eval
+
+40 positions (40 critical, 0 quiet). Loss is the drop in win probability against Stockfish 19's best move at depth 16. Blunder means a loss of 30 or more. Intervals are 95% bootstrap intervals of the mean. Seconds are wall clock per call, with the configured number of calls in flight. The search arm runs on critical positions only, so compare it with the other arms in the critical table; its seconds cover all of its calls, up to seven, three at a time.
+
+## All positions
+
+| Engine | Arm | n | Mean loss (95% CI) | Blunders | vs v1, paired (95% CI) | Mean s | Total $ | $/move |
+|---|---|---|---|---|---|---|---|---|
+| claude | v1 | 40 | 11.3 (6.1 to 17.7) | 6 |  | 10.8 | 0.0000 | 0.00000 |
+| claude | v2 | 40 | 10.2 (5.1 to 16.2) | 6 | -1.1 (-6.1 to +3.9) | 7.7 | 0.0000 | 0.00000 |
+| claude | v2+verify | 40 | 10.2 (5.1 to 16.2) | 6 | -1.1 (-6.1 to +3.9) | 7.9 | 0.0000 | 0.00000 |
+| claude | opinions | 40 | 8.4 (4.1 to 13.7) | 4 | -2.9 (-6.3 to -0.2) | 16.9 | 0.0000 | 0.00000 |
+
+## Critical positions
+
+| Engine | Arm | n | Mean loss (95% CI) | Blunders | vs v1, paired (95% CI) | Mean s | Total $ | $/move |
+|---|---|---|---|---|---|---|---|---|
+| claude | v1 | 40 | 11.3 (6.1 to 17.7) | 6 |  | 10.8 | 0.0000 | 0.00000 |
+| claude | v2 | 40 | 10.2 (5.1 to 16.2) | 6 | -1.1 (-6.1 to +3.9) | 7.7 | 0.0000 | 0.00000 |
+| claude | v2+verify | 40 | 10.2 (5.1 to 16.2) | 6 | -1.1 (-6.1 to +3.9) | 7.9 | 0.0000 | 0.00000 |
+| claude | opinions | 40 | 8.4 (4.1 to 13.7) | 4 | -2.9 (-6.3 to -0.2) | 16.9 | 0.0000 | 0.00000 |
+
+## Quiet positions
+
+| Engine | Arm | n | Mean loss (95% CI) | Blunders | vs v1, paired (95% CI) | Mean s | Total $ | $/move |
+|---|---|---|---|---|---|---|---|---|
+
+## Opinions arm, claude
+
+- Second opinions recorded: 40 of 40 critical positions.
+- Disagreement: 18 of 40 (45%).
+- Escalations recorded: 18 of 18 splits; the pick landed on 18.
+- Final move differs from v2 on 10 of 40 positions.
+- Loss against v2, paired, opinions minus v2: -1.8 (-5.8 to +0.9) over 40 positions (negative is better).
+- Mean seconds: v2 7.7, opinions 16.9 (main and second in parallel, then the escalation).
+- The second, reply and pick calls use the Phase C prompt with expected_reply; the main answer is the v2 record.
+
+claude: the rules check failed on 1 v2 answers; verify changed the move 0 times.
+

@@ -1,6 +1,6 @@
 # Play app design
 
-Proposal dated 2026-11-06. You play Gemini Flash at a time control you pick, in a local browser app, and watch its reasoning stream beside the board. The harness decides how long the model may think on each move. The measurements behind the numbers here are in [FINDINGS.md](../experiments/p0_probe/FINDINGS.md). The broader research design is in [design.md](design.md).
+Updated 2026-11-06 for the final version. You play Claude Opus or Codex Sol at a time control you pick, in a local browser app, and watch its commentary stream beside the board. The harness rates how hard each position is and decides how long the model may think, but never chooses or overrides a move. The harness design and the evidence behind it are in [harness.md](harness.md). The broader research design is in [design.md](design.md).
 
 ## Two shapes considered
 
@@ -21,113 +21,112 @@ Proposal dated 2026-11-06. You play Gemini Flash at a time control you pick, in 
 ```json
 {
   "moves": ["e2e4", "e7e5"],
-  "clock": {"ai_ms": 600000, "human_ms": 598000, "increment_ms": 5000},
-  "model": "gemini-3.6-flash"
+  "clock": {"ai_ms": 300000, "human_ms": 298000, "increment_ms": 3000},
+  "engine": "claude",
+  "time_control": "5+3",
+  "opinions": true,
+  "ponder_hits": 4,
+  "opponent_ms": 6200
 }
 ```
 
-`moves` are UCI moves from the standard starting position. The server rebuilds the board from them and rejects an illegal history with HTTP 400. The response is NDJSON, one event per line:
+`moves` are UCI moves from the standard starting position. The server rebuilds the board from them and rejects an illegal history with HTTP 400. `engine` is `claude`, `codex`, `gemini` or `fake`, and must be on offer right now. Without it the server uses its default. `opinions` overrides `ZEITNOT_OPINIONS` for this request. `ponder_hits` counts the model's moves this game that played at once from pondering; the planner uses it to share the clock among the moves expected to cost time. `opponent_ms` is your median think time this game; a ponder run may plan for 60% of it. The response is NDJSON, one event per line:
 
 | Event | Fields | When |
 |---|---|---|
-| `plan` | `budget_ms`, `deadline_ms`, `level`, `reason` | First, unless the move is forced |
-| `note` | `text` | Harness decisions worth showing, for example "fallback ready: Nf3" or "deadline reached" |
-| `thought` | `text` | Each streamed piece of the model's thinking summary |
-| `move` | `uci`, `san`, `source`, `elapsed_ms`, `usd`, `tokens` | Exactly once, last, on success |
-| `error` | `message` | Last, only when no move can be produced, for example when the spend cap is reached |
+| `plan` | `budget_ms`, `deadline_ms`, `level`, `reason`, `engine`, `difficulty`, `difficulty_text`, `blunder_chance`, `opinions`, `second_level` | First, unless the move is forced |
+| `call` | `call`, `status`, `role`, `label`, `parent`, `engine`, `level`, `framing`, `fen`, `elapsed_ms`, `move`, `uci`, `expected_reply`, `facts`, `error` | Each step in the life of one model call: `started`, then `answered`, `cancelled` or `failed`, and `chosen` for the answers that won |
+| `note` | `text` | Harness decisions, for example "fallback ready: Nf3", "deadline reached" or "opinions split (Bc4 vs Nf3); time for a quick comparison" |
+| `thought` | `text`, `stream`, `call` | A whole reasoning summary when `stream` is null. Otherwise new commentary text for the chunk with that id, which is the call id. |
+| `pulse` | `call` | A heartbeat while that call works, at most four a second per call |
+| `decision` | `text`, `move`, `call` | Just before `move`: one sentence on why this move won, and the id of the call whose answer it is |
+| `move` | `uci`, `san`, `source`, `elapsed_ms`, `usd`, `tokens`, `note`, `ponder_hit`, `expected_reply`, `ponder_replies` | Exactly once, last, on success |
+| `error` | `message` | Last, only when the model failed every attempt or the spend cap is reached |
 
-`source` is one of `model`, `fallback`, `forced` or `emergency`. `tokens` is `{"input": int, "thinking": int, "output": int}` summed over every call made for this move.
+Every model call has an id, unique per server process, so a ponder run's calls keep their ids when `/api/think` replays them. `parent` is the id of the call a call depends on, or null:
 
-`GET /api/status` returns `{"spent_usd", "cap_usd", "models", "default_model", "fake"}`.
+| Role | Label | Parent | When |
+|---|---|---|---|
+| `main` | "Main", "Main · attempt 2" | none | Every move that is not forced |
+| `second_opinion` | "Second opinion · most forcing" | none | Hard moves with opinions on, at the planned level, including ponder runs |
+| `backup` | "Backup · safe moves only" | none | When the main call thinks above the backup level |
+| `reply` | "Your best reply to Bc4" | the call that proposed Bc4 | The opinions split and time allows. `fen` is the position after Bc4, and the answered event lists the `facts` after the reply. |
+| `pick` | "Pick · Bc4 or Nf3" | none | After the replies |
+| `ponder` | "If you play Nf3" | none | The main call of a ponder run. Every other top-level call of that run hangs under it. |
+
+`decision` sentences, by path: "The model chose e4.", "Both opinions chose Nf3.", "Opinions split (Bc4 vs Nf3). After Bc4 you would play Qb3, so Nf3.", "Opinions split (Bc4 vs Nf3) with no time to compare, so the main answer Bc4.", "Opinions split (Bc4 vs Nf3); the pick chose Nf3." (the quick comparison), "Opinions split (Bc4 vs Nf3); the pick did not finish, so the main answer Bc4.", "The second opinion did not answer in time, so the main answer Bc4.", "The main call ran past the deadline, so the backup Nc3.", and on a ponder hit "You played Nf3 as expected, so the prepared Bc5 plays at once." A forced move has no `decision`; the browser shows "The only legal move."
+
+`source` is `model`, `fallback` (the backup call's answer, also a model answer) or `forced`. `tokens` is `{"input": int, "thinking": int, "output": int}` summed over every call made for this move. `expected_reply` is the reply the winning answer expects, in SAN, checked against the position after the move, or null. `ponder_replies` are UCI replies to ponder, the expected one first: one by default, up to `ZEITNOT_PONDER_REPLIES`. A ponder run on a hard position asks the second opinion too, unless `ZEITNOT_PONDER_OPINIONS=0`.
+
+`POST /api/ponder` takes the same body plus `expected_reply` (UCI) and returns `{status, fen}` at once. It runs the one-move pipeline in the background on the position after that reply and caches the result by FEN. Runs for replies to the same position ponder side by side; a request for another position cancels them.
+
+`GET /api/ponder/stream?fen=...` streams one ponder run's events as NDJSON: everything so far except pulses, then live events until the run ends. It never sends the run's `move`; its last event is the run's `decision`. It returns 404 when nothing is pondering that position.
+
+`GET /api/status` returns `spent_usd`, `cap_usd`, `fake`, `opinions`, `difficulty` (the rater: `maia2` or `legal moves`), `pondering` (per engine), `setup_help` (install and login lines when neither CLI is ready), and `engines`. Each engine entry has `id`, `name`, `model`, `label`, `default`, `free`, `suits`, `hint`, `time_control`, `latency` and `regimes` (the level per difficulty tier at move 10 for each clock, which the start screen states).
+
+## Opponents and detection
+
+| Engine | Model | Levels | Process |
+|---|---|---|---|
+| `claude` | Opus, fixed | `--effort` low, medium, high; xhigh and max are mapped but never planned | One stripped `claude -p --output-format stream-json` per call, run from an empty temporary directory |
+| `codex` | `gpt-6.1-sol`, fixed | low, medium; xhigh and max are mapped but never planned | One `codex app-server` per server process, a fresh ephemeral thread per call |
+| `gemini` | `gemini-3.6-flash` | minimal, low, medium | The Gemini API. Only with `ZEITNOT_GEMINI=1` and a key. |
+| `fake` | scripted | any | No calls. In real mode it is offered, free, only when neither CLI is ready. |
+
+A `Detector` runs `claude auth status --json` and `codex login status` in threads, and caches the result for 30 s. `/api/status` and `/api/think` read it, so a login while the app runs shows up without a restart. Detection never depends on Gemini.
+
+Each engine streams `Thought`, `Rationale` and `Pulse` events and ends with one `Answer`. The answer is JSON `{commentary, move, expected_reply, note}`, with `move` constrained to the allowed moves: Claude's `--json-schema`, Codex's `outputSchema`, Gemini's response schema. `RationaleParser` decodes the commentary string out of the partial JSON as it streams, up to 60 words. Claude streams it as `input_json_delta` events of its structured-output tool, Codex as `item/agentMessage/delta`, and Gemini as answer text chunks. Claude's thinking deltas carry no text in headless mode, so they become pulses. When Claude's safeguards refuse an answer with a commentary, the engine asks once more without the commentary field.
+
+Closing an engine stream interrupts the call: Claude's process is killed, Codex gets `turn/interrupt`, and Gemini's stream is closed.
 
 ## Module map
 
 ```
 zeitnot/
-  config.py    Settings from .env and the environment, the price table, the latency table
-  rules.py     board_from_moves, render (prompt text), safe_moves, emergency_move
-  timeman.py   plan(): pure, clock and position in, Plan out
-  models.py    ModelEvent types, the ModelClient protocol, GeminiClient, FakeClient
+  config.py    Settings from .env and the environment, prices, latency seeds, speed hints, setup help
+  rules.py     board_from_moves, safe_moves, hanging, check_move
+  facts.py     the facts block, line facts after a reply, the expected-reply check, the miss digest
+  difficulty.py  the position's tier: Maia-2's blunder chance past ply 10, the legal-move count before it or without Maia
+  context.py   the per-move prompt and the forcing framing
+  timeman.py   plan(): pure, clock, difficulty tier and live latency in, Plan out
+  engines.py   the engine protocol, the latency table, the answer schema and RationaleParser, Gemini and fake engines
+  claude.py    ClaudeEngine and claude_available
+  codex.py     AppServer, CodexEngine and codex_logged_in
+  events.py    the NDJSON event types
+  calls.py     the model calls of one move: ids, roles and parents, call events, one queue, a pulse gate per call
+  difficulty.py  Maia-2's blunder chance per position, the legal-move count where Maia does not rate
+  player.py    one_move(): forced moves, difficulty, plan, main, second opinion and backup, comparison,
+               decision; think() adds pondering and the log
+  compare.py   escalate(): the full comparison (reply calls, then the pick) or the quick one (the pick alone)
+  ponder.py    background runs cached by FEN, several per turn
   ledger.py    SpendLedger persisted to data/spend.json
-  player.py    think(): orchestrates one move and yields events
-  server.py    FastAPI app: /api/think, /api/status, static files from web/
+  server.py    FastAPI app, Detector, /api/think, /api/ponder, /api/status, static files from web/
   __main__.py  python -m zeitnot: uvicorn on 127.0.0.1:8000, opens the browser
 web/
-  index.html, app.js, style.css
-tests/
+  index.html, app.js, board.js, mind.js, calltree.js, gaze.js, util.js, sound.js, style.css, themes.css
 ```
-
-## Core types
-
-```python
-@dataclass(frozen=True)
-class Clock:
-    ai_ms: int; human_ms: int; increment_ms: int
-
-Level = Literal["none", "minimal", "low", "medium", "high"]   # "none" means no main call, fallback only
-
-@dataclass(frozen=True)
-class Plan:
-    level: Level; budget_ms: int; deadline_ms: int; reason: str
-
-# What a model client yields while streaming
-@dataclass(frozen=True)
-class Thought:
-    text: str
-@dataclass(frozen=True)
-class Answer:
-    san: str; input_tokens: int; thinking_tokens: int; output_tokens: int
-ModelEvent = Thought | Answer
-
-class ModelClient(Protocol):
-    def stream(self, prompt: str, choices: list[str], level: Level) -> AsyncIterator[ModelEvent]: ...
-
-# What think() yields; serialised one per NDJSON line
-Event = PlanEvent | NoteEvent | ThoughtEvent | MoveEvent | ErrorEvent
-async def think(req: ThinkRequest, client: ModelClient, ledger: SpendLedger, settings: Settings) -> AsyncIterator[Event]
-```
-
-`GeminiClient.stream` calls `client.aio.models.generate_content_stream` with `ThinkingConfig(thinking_level=level, include_thoughts=True)`, `response_mime_type="text/x.enum"` and `response_schema={"type": "STRING", "enum": choices}`. Parts with `part.thought` become `Thought`. The final text and `usage_metadata` become one `Answer`. `experiments/p0_probe/gemini_timing.py` is a working reference for this call.
-
-`FakeClient` needs no API key. It yields a few scripted thoughts with short delays, then answers with a deterministic choice. Its delays come from settings, so tests can make it slower than a deadline. `ZEITNOT_FAKE_MODEL=1` selects it.
-
-## Time manager v1
-
-`plan(clock, ply, legal_count, latency)` is a pure function.
-
-1. `moves_to_go = max(10, 40 - ply // 2)`.
-2. `budget = min(clock.ai_ms / moves_to_go + 0.8 * clock.increment_ms, 0.25 * clock.ai_ms)`.
-3. `level` is the highest of `medium` and `low` whose p50 latency fits inside `budget`. Otherwise `level` is `none`.
-4. `deadline_ms = min(2 * budget, 0.30 * clock.ai_ms, clock.ai_ms - 1500)`, floored at 0. The main call is cancelled at the deadline. The 1,500 ms safety margin applies only here, so it never zeroes the budget.
-5. Below 10,000 ms on the model's clock, `level` is `none`. Below 2,000 ms, the player makes no API call and plays `emergency_move`.
-
-At the start of a game this gives `none` with a 3 s deadline at 1+0 (fallback moves only), `low` at 3+2 and 5+3, and `medium` at 10+5 and 15+10. The first version subtracted the safety margin from the budget, which made 1+0 play rules-only moves from move 1.
-
-The latency table starts at p50 11,000 ms for `medium` (measured in P0), 5,000 ms for `low` and 2,500 ms for `minimal`. The last two are guesses until they are measured on a billed key. The table lives in `config.py`.
 
 ## One move, step by step
 
 1. Rebuild the board. If there is exactly one legal move, yield `move` with source `forced` and stop.
-2. If the ledger is over its cap, yield `error` and stop.
-3. Compute and yield the `plan`.
-4. Start the fallback task. It calls the model at `minimal` with only the moves that pass `safe_moves` and collects the answer without streaming thoughts. When it lands, yield a `note`.
-5. If `plan.level` is not `none`, start the main task at `plan.level` with every legal move. Yield each `Thought` as a `thought` event.
-6. Commit the main answer if it arrives before the deadline. Otherwise, or if the main call fails, yield a `note` and commit the fallback answer, waiting for it until the deadline if needed. If neither exists, commit `emergency_move` (the first safe move in a fixed order, rules only).
-7. Cancel unfinished tasks, add the cost of every finished call to the ledger, append a record to `logs/moves.jsonl`, and yield `move`.
+2. If pondering has a result for this position, replay its events, yield a `decision`, and yield its move with `ponder_hit`. Otherwise note the moves the other ponder runs prepared, for the digest.
+3. Compute the facts, rate the position's difficulty off the event loop, compute the plan, and yield `plan`.
+4. Start the main call. On a hard move with opinions on, start the second opinion with the most-forcing framing, one level deeper than the main call when that level's median latency fits the budget, else at the same level. When the level is above the backup level, start the backup call at low with only safe moves.
+5. When the main answer lands, wait for the second opinion until the budget runs out (until the deadline when the main answer itself came after the budget), and never past the point where not even the quick comparison fits. On a split, run `compare.escalate`: the full comparison when two low p50s fit before the deadline, the quick one when one fits. The pick's answer is the move. Otherwise go on with the main answer, which plays as it is: no rule overrides it. If the main call fails three times, a landed second opinion plays before the move ends in an error.
+6. At the deadline, play the backup move if it landed. Otherwise keep waiting for the main answer. The main call gets up to three attempts when it fails.
+7. Cancel unfinished calls, mark the winning calls `chosen`, and yield `decision`. Charge every finished call to the ledger, store the note, the expected reply and the unplayed candidates for the next digest, append a record with the decision and the call tree to `logs/moves.jsonl`, and yield `move`.
 
-If the browser disconnects, the server cancels both tasks.
+If the browser disconnects, the server cancels every call of the move.
 
 ## Browser behaviour
 
-- **Setup.** Time-control presets 1+0, 3+2, 5+3, 10+5 (default) and 15+10, plus custom minutes and increment. Colour: white, black or random. A model list comes from `/api/status`.
-- **Board.** An MIT- or BSD-licensed board library with pinned versions, and chess.js for rules. Promotion may auto-queen in v1.
-- **Clocks.** Both clocks tick in the browser using `performance.now()`. The increment is added after each move. The model's clock runs while its request is in flight. A clock at zero loses the game.
-- **Thinking panel.** It shows the plan, the notes and the streamed thoughts as they arrive, with `**bold**` headings rendered. Each finished move shows its source, seconds and cost. Earlier moves' thoughts stay available, collapsed.
-- **Game end.** Checkmate, stalemate, the draw rules chess.js reports, a flag, or resignation. A new-game button resets.
-- **Cost.** The panel shows this game's spend and the ledger total from `/api/status`.
+- **Setup.** One plain-text chip per detected opponent, remembered between visits. Time-control presets 1+0, 3+2, 5+3, 10+5 and 15+10, plus custom, remembered per opponent and defaulting to the opponent's own (5+3 for Claude, 15+10 for Codex). Under it, one line says what the clock buys: "On 5+3 it thinks at medium, high on hard moves and low on easy ones." Colour: white, black or random. When no opponent is ready, install and login steps and the fake demo.
+- **Board.** cm-chessboard with chess.js for rules, a promotion picker, gaze glows, and arrows per call: each call's answer and the moves its commentary names in that call's colour, the backup move as a dashed ghost, your replies in the opponent colour. Hovering or focusing a card dims every other call's arrows. At most one arrow per square pair is drawn.
+- **Clocks.** Both clocks tick in the browser using `performance.now()`. The increment is added after each move. The model's clock runs while its request is in flight. A clock at zero loses the game, for the model as for you.
+- **Mind panel.** The orb with its budget ring, sparks that advance on each `pulse` from any call, and an elapsed counter. Below it, the process view (`mind.js`): the plan line, which shimmers while the model thinks, one card per call nested by parent, harness notes, and the decision. `calltree.js` holds the pure parts: the reducer that applies `call` events (a status only moves forward, so a replay is harmless), the tree rows with their connector rails, and the colour per call. While you think, a "Considering your replies" section shows one process view per ponder run. When you move, the matching run's view becomes the move's view, and `/api/think` replays its events into it without repeating the text. Each finished move collapses into a history row that rebuilds its process view from the recorded events.
+- **Game end.** Checkmate, stalemate, the draw rules chess.js reports, a flag, or resignation. The end card offers a rematch, a new game and the PGN.
 
 ## Verification
 
-- `pytest` covers `plan()` cases, `safe_moves` cases, and `think()` with `FakeClient`: forced move, main answer in time, deadline then fallback, main error then fallback, panic and emergency, and the spend cap. It also streams `/api/think` through FastAPI's test client in fake mode.
-- A browser run in fake mode plays a full game through the UI.
-- With a billed Gemini key, one real game confirms the timings and the thinking stream.
+- `pytest` covers the rules, facts, the time manager, the pipeline with scripted engines, the second opinion and its escalation (call lifecycle and parents, agreement, split with and without time, deadlines, no code-chosen move on any path, decision sentences), the expected-reply check and the miss digest, pondering and the ponder stream, the Maia-2 rater and its fallback, the quick comparison, the Claude engine against a fake `claude` program (streaming, refusal, interrupt), the Codex engine against a fake `codex app-server`, detection against fake CLIs (installed, logged out, missing), the picker's status data, and the eval runner's resume. It also runs the node tests for `web/gaze.js`, `web/util.js` and `web/calltree.js`.
+- One real move each from Claude Opus and Codex Sol through `/api/think` confirms pulses, streamed commentary and a legal move.

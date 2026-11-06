@@ -103,6 +103,19 @@ These 10 positions are mostly easy, since Luna's filtered `none` also averaged a
 
 A pre-measurement estimate from ChessBench's cost data said 5 to 7 s. It assumed about 1,000 thinking tokens at about 200 tokens per second, and both assumptions were wrong. At 11 s per move, medium thinking on every move fits 10+5 and slower, is borderline at 5+3, and does not fit 3+2. The free tier failed 4 of 10 calls on 3.6 Flash and every call on 3.7 and 3.8 Flash, so it cannot support play.
 
+### Codex models through a ChatGPT plan play as well as Gemini `low`, but slower
+
+`codex_compare.py` played the 30-position subset through one persistent `codex app-server` per worker, with a fresh ephemeral thread per move, the built-in instructions replaced and injected context stripped. These calls cost no money and drew on the ChatGPT plan's usage. Three workers per model ran at once, so the latencies are higher than the sequential measurements in [harness.md](../../docs/harness.md) (8.5 to 55 s for Sol).
+
+| Engine, 30 positions | Mean loss (95% CI) | Blunders | Good | Median s | p90 s |
+|---|---|---|---|---|---|
+| gpt-6.1-sol `low` via Codex | 1.9 (0.5 to 4.2) | 0 | 90% | 59.3 | 77.8 |
+| gpt-6-astra `low` via Codex | 4.2 (1.2 to 8.3) | 2 | 77% | 74.8 | 107.4 |
+| gemini-3.6-flash `low` | 2.0 (0.8 to 3.5) | 0 | 80% | 4.1 | 8.5 |
+| Human move from the game | 2.4 (1.0 to 4.2) | 0 | 83% | | |
+
+Sol and Gemini `low` are indistinguishable on these mostly easy positions. Gemini answers about 3 to 10 times faster.
+
 ## Caveats
 
 - Each effort comparison rests on 30 positions. Treat the order of `low`, `medium` and `high` as likely, not proven.

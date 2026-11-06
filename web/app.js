@@ -4,17 +4,18 @@ import { resolveMove } from "./gaze.js";
 import { Mind } from "./mind.js";
 import { Sound } from "./sound.js";
 import {
-  DEFAULT_PRESET,
   PRESETS,
-  describeCost,
+  defaultPreset,
+  engineHint,
   formatClock,
   formatSeconds,
-  formatUsd,
-  modelLabel,
+  median,
   moveLabel,
   ndjsonLines,
   soundCues,
+  sum,
   summarize,
+  totalTime,
 } from "./util.js";
 
 const $ = (id) => document.getElementById(id);
@@ -45,10 +46,36 @@ const prefs = {
 };
 
 const sound = new Sound({ enabled: prefs.get("sound", true), volume: prefs.get("volume", 0.7) });
-const mind = new Mind($("mind"), { onGaze: gazeAt });
+const legalCache = new Map(); // FEN -> chess.js verbose moves, for resolving the moves a card's commentary names
+
+function legalAt(fen) {
+  if (!legalCache.has(fen)) {
+    if (legalCache.size > 64) legalCache.clear();
+    legalCache.set(fen, new Chess(fen).moves({ verbose: true }));
+  }
+  return legalCache.get(fen);
+}
+
+/** How the mind panel's cards draw on the board: each call's arrows in its colour, and focus on hover. */
+const boardHooks = {
+  arrow(from, to, options) {
+    board?.arrow(from, to, options);
+  },
+  gaze(node, token, tone) {
+    if (!board) return;
+    if (token.square) board.glow(token.square);
+    const move = resolveMove(token, legalAt(node.fen));
+    if (move) board.arrow(move.from, move.to, { kind: "gaze", tone, call: node.id });
+  },
+  focus(call) {
+    board?.focus(call);
+  },
+};
+const mind = new Mind($("mind"), { hooks: boardHooks });
 let board = null;
 let serverStatus = null;
 let game = null;
+const INSTANT_MS = 1_000; // a prepared move this fast cost the model's clock nothing
 
 function newGame(settings) {
   const ms = Math.round(settings.minutes * 60_000);
@@ -57,24 +84,28 @@ function newGame(settings) {
     chess: new Chess(),
     humanColor: settings.humanColor,
     aiColor: settings.humanColor === "w" ? "b" : "w",
+    engine: settings.engine,
     model: settings.model,
+    label: settings.label,
     incrementMs: settings.increment * 1000,
     clocks: { w: ms, b: ms },
     turnStart: 0,
     uciMoves: [],
     abort: null,
-    spendUsd: 0,
     over: false,
     result: null, // {text, winner: "human" | "ai" | "draw" | null}, null winner when the game was aborted
     thinking: false,
     plan: null, // the plan event of the move being thought about
-    legal: [], // chess.js verbose moves for the model's position, for gaze and the ghost arrow
-    records: [], // one {level, source, elapsedMs, usd} per model move, for the end card
+    records: [], // one {level, difficulty, source, elapsedMs, ponderHit} per model move, for the end card
+    humanTimes: [], // your think time per move, ms: the end card, and how long the model may ponder
+    expected: null, // the SAN reply the model's last answer expects from you, while it is your turn
+    ponderReplies: [], // UCI replies the model's last move considered, to ponder while you think
+    ponderAborts: [], // one AbortController per ponder stream being followed
     lowTickSecond: null,
   };
 }
 
-const aiName = (g) => modelLabel(g.model).split(" ")[0];
+const aiName = (g) => g.label.split(" ")[0];
 
 function remaining(g, color) {
   const running = !g.over && g.chess.turn() === color;
@@ -95,12 +126,6 @@ function renderClocks() {
   }
 }
 
-function renderCost() {
-  if (!serverStatus) return;
-  const spent = game ? `This game ${formatUsd(game.spendUsd)} · ` : "";
-  $("cost").textContent = `${spent}${formatUsd(serverStatus.spent_usd)} of ${formatUsd(serverStatus.cap_usd)}`;
-}
-
 async function refreshStatus() {
   try {
     serverStatus = await (await fetch("/api/status")).json();
@@ -108,8 +133,7 @@ async function refreshStatus() {
     return;
   }
   $("mode-badge").hidden = !serverStatus.fake;
-  renderCost();
-  renderCostHint();
+  renderEngineHint();
 }
 
 function tick() {
@@ -139,6 +163,7 @@ function endGame(text, winner) {
   if (game.over) return;
   const g = game;
   g.abort?.abort();
+  stopPondering(g);
   g.clocks[g.chess.turn()] = Math.max(0, remaining(g, g.chess.turn()));
   g.over = true;
   g.result = { text, winner };
@@ -189,10 +214,12 @@ function beginTurn() {
   game.lowTickSecond = null;
   renderClocks();
   if (game.chess.turn() === game.aiColor) {
+    game.expected = null;
     requestModelMove(game);
   } else {
-    mind.wait(game.chess.inCheck() ? "Check. Your move." : "Your move.");
+    mind.wait(game.chess.inCheck() ? "Check. Your move." : "Your move.", game.expected);
     board.enableInput(game.humanColor, (square) => game.chess.moves({ square, verbose: true }));
+    startPondering(game);
   }
 }
 
@@ -216,32 +243,21 @@ function humanMove({ from, to, promotion }) {
     return;
   }
   board.disableInput();
+  stopPondering(game);
+  mind.resolvePonder(move.from + move.to + (move.promotion ?? ""), move.san);
+  board.clearGaze();
+  const spentMs = performance.now() - game.turnStart;
+  game.humanTimes.push(spentMs);
+  mind.commitHuman({ label: moveLabel(game.uciMoves.length, move.san), elapsedMs: spentMs });
   showMove(move);
   commitMove(move);
-}
-
-function gazeAt(token) {
-  if (!game?.thinking) return;
-  if (token.square) board.glow(token.square);
-  const move = resolveMove(token, game.legal);
-  if (move) board.gazeArrow(move.from, move.to);
 }
 
 function handleEvent(g, ev) {
   switch (ev.type) {
     case "plan":
       g.plan = ev;
-      mind.plan(ev);
-      break;
-    case "note": {
-      mind.note(ev.text);
-      const san = ev.text.match(/^fallback ready: (\S+)$/)?.[1];
-      const backup = san && g.legal.find((m) => m.san === san);
-      if (backup) board.ghost(backup.from, backup.to);
-      break;
-    }
-    case "thought":
-      mind.thought(ev.text);
+      mind.event(ev);
       break;
     case "move":
       applyModelMove(g, ev);
@@ -249,6 +265,8 @@ function handleEvent(g, ev) {
     case "error":
       endGame(`The model could not move: ${ev.message}`, null);
       break;
+    default:
+      mind.event(ev);
   }
 }
 
@@ -261,14 +279,82 @@ function applyModelMove(g, ev) {
     return;
   }
   const level = ev.source === "forced" ? "forced" : (g.plan?.level ?? "none");
-  g.records.push({ level, source: ev.source, elapsedMs: ev.elapsed_ms, usd: ev.usd });
-  g.spendUsd += ev.usd;
+  const difficulty = ev.source === "forced" ? null : (g.plan?.difficulty ?? null);
+  g.records.push({ level, difficulty, source: ev.source, elapsedMs: ev.elapsed_ms, ponderHit: ev.ponder_hit });
   g.thinking = false;
-  mind.commit({ label: moveLabel(g.uciMoves.length, ev.san), level, source: ev.source, elapsedMs: ev.elapsed_ms, usd: ev.usd });
+  g.expected = ev.expected_reply ?? null;
+  g.ponderReplies = ev.ponder_replies ?? [];
+  mind.commit({
+    label: moveLabel(g.uciMoves.length, ev.san),
+    level,
+    difficulty,
+    source: ev.source,
+    elapsedMs: ev.elapsed_ms,
+    ponderHit: ev.ponder_hit,
+    move: ev,
+  });
   board.clearGaze();
   showMove(move).then(() => game === g && board.pulse(move.to));
   commitMove(move);
   refreshStatus();
+}
+
+function requestBody(g) {
+  return {
+    moves: g.uciMoves,
+    clock: {
+      ai_ms: Math.max(0, Math.round(remaining(g, g.aiColor))),
+      human_ms: Math.max(0, Math.round(remaining(g, g.humanColor))),
+      increment_ms: g.incrementMs,
+    },
+    engine: g.engine,
+    model: g.model,
+    time_control: `${g.settings.minutes}+${g.settings.increment}`,
+    // A prepared move counts as instant only if it played at once; one still being prepared when claimed cost clock.
+    ponder_hits: g.records.filter((r) => r.ponderHit && r.elapsedMs < INSTANT_MS).length,
+    opponent_ms: median(g.humanTimes.slice(-7)),
+  };
+}
+
+/**
+ * Lets the model think on your time about each reply its last move considered, and shows each run as a card. The
+ * results wait in the server's cache; the one for the reply you play is replayed by the next /api/think.
+ */
+function startPondering(g) {
+  if (!serverStatus?.pondering?.[g.engine]) return;
+  const legal = g.chess.moves({ verbose: true });
+  for (const uci of g.ponderReplies) {
+    const move = legal.find((m) => m.from + m.to + (m.promotion ?? "") === uci);
+    if (!move) continue;
+    const controller = new AbortController();
+    g.ponderAborts.push(controller);
+    const view = mind.ponder({ san: move.san, uci });
+    followPonder(g, view, uci, controller.signal).catch(() => {
+      if (!controller.signal.aborted && game === g) mind.ponderEnded(view);
+    });
+  }
+}
+
+async function followPonder(g, view, uci, signal) {
+  const post = { method: "POST", headers: { "Content-Type": "application/json" }, signal };
+  const res = await fetch("/api/ponder", { ...post, body: JSON.stringify({ ...requestBody(g), expected_reply: uci }) });
+  const { status, fen } = await res.json();
+  if (status === "skipped") {
+    mind.ponderEnded(view);
+    return;
+  }
+  const stream = await fetch(`/api/ponder/stream?fen=${encodeURIComponent(fen)}&engine=${encodeURIComponent(g.engine)}`, { signal });
+  if (!stream.ok) throw new Error(stream.statusText);
+  for await (const ev of ndjsonLines(stream)) {
+    if (game !== g || signal.aborted) return;
+    mind.ponderEvent(view, ev);
+  }
+  if (game === g && !signal.aborted) mind.ponderEnded(view);
+}
+
+function stopPondering(g) {
+  for (const controller of g.ponderAborts) controller.abort();
+  g.ponderAborts = [];
 }
 
 async function requestModelMove(g) {
@@ -276,17 +362,8 @@ async function requestModelMove(g) {
   g.abort = controller;
   g.plan = null;
   g.thinking = true;
-  g.legal = g.chess.moves({ verbose: true });
   mind.think();
-  const body = {
-    moves: g.uciMoves,
-    clock: {
-      ai_ms: Math.max(0, Math.round(remaining(g, g.aiColor))),
-      human_ms: Math.max(0, Math.round(remaining(g, g.humanColor))),
-      increment_ms: g.incrementMs,
-    },
-    model: g.model,
-  };
+  const body = requestBody(g);
   let moved = false;
   try {
     const res = await fetch("/api/think", {
@@ -314,7 +391,7 @@ async function requestModelMove(g) {
 function pgnText(g) {
   const winnerColor = { human: g.humanColor, ai: g.aiColor }[g.result.winner];
   const result = g.result.winner === "draw" ? "1/2-1/2" : winnerColor === "w" ? "1-0" : winnerColor === "b" ? "0-1" : "*";
-  const ai = modelLabel(g.model);
+  const ai = g.label;
   const date = new Date().toISOString().slice(0, 10).replaceAll("-", ".");
   const headers = {
     Event: "zeitnot",
@@ -333,10 +410,12 @@ function showEndCard(g) {
   const s = summarize(g.records);
   $("end-title").textContent = g.result.text;
   const rows = [
-    ["Think time", s.moves ? `${s.thinkMs >= 60_000 ? formatClock(s.thinkMs) : formatSeconds(s.thinkMs)} total · ${formatSeconds(s.avgMs)} a move` : "no moves"],
+    [`${aiName(g)}'s time`, s.moves ? `${totalTime(s.thinkMs)} · ${formatSeconds(s.avgMs)} a move` : "no moves"],
+    ["Your time", g.humanTimes.length ? `${totalTime(sum(g.humanTimes))} · ${formatSeconds(sum(g.humanTimes) / g.humanTimes.length)} a move` : "no moves"],
+    ["Hard moves", `${s.hard} of ${s.moves}`],
     ["Levels", s.levels.map(([label, n]) => `${label} ${n}`).join(" · ") || "none"],
-    ["Fallbacks", `${s.fallbacks}${s.emergencies ? ` · ${s.emergencies} emergency` : ""}`],
-    ["Cost", formatUsd(g.spendUsd)],
+    ["Prepared", `${s.prepared} played at once`],
+    ...(s.fallbacks ? [["Backups", String(s.fallbacks)]] : []),
   ];
   $("end-stats").replaceChildren(
     ...rows.flatMap(([label, value]) => {
@@ -360,6 +439,7 @@ function hideEndCard() {
 
 function startGame(settings) {
   game?.abort?.abort();
+  if (game) stopPondering(game);
   game = newGame(settings);
   $("setup").hidden = true;
   $("game").hidden = false;
@@ -368,22 +448,24 @@ function startGame(settings) {
   board = new Board($("board"), { orientation: settings.humanColor, onMove: humanMove });
   hideEndCard();
   mind.reset();
-  $("ai-name").textContent = modelLabel(settings.model);
+  mind.setEngine(settings.family, settings.label);
+  $("game").dataset.engine = settings.family;
+  $("ai-name").textContent = settings.label;
   $("resign").disabled = false;
   resetResign();
-  renderCost();
   sound.play("start");
   beginTurn();
 }
 
 function showSetup() {
   game?.abort?.abort();
+  if (game) stopPondering(game);
   game = null;
   hideEndCard();
   $("game").hidden = true;
   $("game-controls").hidden = true;
   $("setup").hidden = false;
-  refreshStatus();
+  refreshStatus().then(fillOpponents);
 }
 
 let resignTimer = null;
@@ -408,11 +490,22 @@ function onResign() {
 }
 
 const setup = {
-  minutes: prefs.get("minutes", DEFAULT_PRESET.minutes),
-  increment: prefs.get("increment", DEFAULT_PRESET.increment),
-  custom: prefs.get("custom", false),
+  engine: null, // a /api/status engine entry, set once the status arrives
+  ...defaultPreset(null),
+  custom: false,
   side: prefs.get("side", "random"),
 };
+
+/** Each opponent keeps its own time control, so Claude starts at 5+3 and Codex at 15+10. */
+function loadTimeControl(engine) {
+  const saved = prefs.get(`tc.${engine.id}`, null);
+  Object.assign(setup, saved ?? { ...defaultPreset(engine), custom: false });
+  if (!setup.custom && !PRESETS.some((p) => p.minutes === setup.minutes && p.increment === setup.increment)) setup.custom = true;
+}
+
+function saveTimeControl() {
+  if (setup.engine) prefs.set(`tc.${setup.engine.id}`, { minutes: setup.minutes, increment: setup.increment, custom: setup.custom });
+}
 
 function chip(text, onClick) {
   const button = document.createElement("button");
@@ -423,10 +516,8 @@ function chip(text, onClick) {
   return button;
 }
 
-function renderCostHint() {
-  $("cost-hint").textContent = serverStatus?.fake
-    ? "Fake model: no API calls, no cost."
-    : `${describeCost(setup.minutes, setup.increment)} on Gemini Flash`;
+function renderEngineHint() {
+  $("engine-hint").textContent = engineHint(setup.engine, setup.minutes, setup.increment);
 }
 
 function renderSetup() {
@@ -436,15 +527,18 @@ function renderSetup() {
     button.setAttribute("aria-pressed", String(p ? presetMatch(p) : setup.custom));
   }
   for (const button of $("sides").children) button.setAttribute("aria-pressed", String(button.dataset.side === setup.side));
+  for (const button of $("opponents").querySelectorAll(".chip")) {
+    button.setAttribute("aria-pressed", String(button.dataset.id === setup.engine?.id));
+  }
   $("custom").hidden = !setup.custom;
   $("minutes").value = setup.minutes;
   $("increment").value = setup.increment;
-  renderCostHint();
-  for (const key of ["minutes", "increment", "custom", "side"]) prefs.set(key, setup[key]);
+  renderEngineHint();
+  saveTimeControl();
+  prefs.set("side", setup.side);
 }
 
 function buildSetup() {
-  if (!setup.custom && !PRESETS.some((p) => p.minutes === setup.minutes && p.increment === setup.increment)) setup.custom = true;
   $("presets").append(
     ...PRESETS.map((p, i) => {
       const button = chip(`${p.minutes}+${p.increment}`, () => {
@@ -475,32 +569,61 @@ function buildSetup() {
       const value = Number($(key).value);
       if (Number.isFinite(value) && value >= Number($(key).min)) {
         setup[key] = value;
-        renderCostHint();
-        prefs.set(key, value);
+        renderEngineHint();
+        saveTimeControl();
       }
     });
   }
   $("play").addEventListener("click", () => {
+    if (!setup.engine) return;
     const humanColor = setup.side === "random" ? (Math.random() < 0.5 ? "w" : "b") : setup.side === "white" ? "w" : "b";
-    prefs.set("model", $("model").value);
-    startGame({ minutes: setup.minutes, increment: setup.increment, humanColor, model: $("model").value });
+    const { id, name, model, label } = setup.engine;
+    startGame({
+      minutes: setup.minutes,
+      increment: setup.increment,
+      humanColor,
+      engine: id,
+      family: name,
+      model,
+      label,
+    });
   });
   renderSetup();
 }
 
-function fillModels() {
-  const select = $("model");
-  const preferred = prefs.get("model", null);
-  const models = serverStatus?.models ?? [];
-  select.replaceChildren(
-    ...models.map((name) => {
-      const option = document.createElement("option");
-      option.value = name;
-      option.textContent = modelLabel(name);
-      option.selected = name === (models.includes(preferred) ? preferred : serverStatus.default_model);
-      return option;
+function chooseOpponent(engine) {
+  prefs.set("engine", engine.id);
+  setup.engine = engine;
+  loadTimeControl(engine);
+  renderSetup();
+}
+
+/** One plain-text chip per opponent the server detected, or how to set one up when it found none. */
+function fillOpponents() {
+  const engines = serverStatus?.engines ?? [];
+  const preferred = engines.find((e) => e.id === prefs.get("engine", null)) ?? engines.find((e) => e.default) ?? engines[0];
+  const shown = [...$("opponents").children].map((b) => b.dataset.id).join();
+  if (shown !== engines.map((e) => e.id).join()) {
+    $("opponents").replaceChildren(
+      ...engines.map((engine) => {
+        const button = chip(engine.label, () => chooseOpponent(engine));
+        button.dataset.id = engine.id;
+        button.dataset.engine = engine.name;
+        return button;
+      }),
+    );
+  }
+  const help = serverStatus?.setup_help ?? [];
+  $("setup-help").hidden = !help.length;
+  $("setup-help-lines").replaceChildren(
+    ...help.map((line) => {
+      const item = document.createElement("li");
+      item.textContent = line;
+      return item;
     }),
   );
+  if (preferred && preferred.id !== setup.engine?.id) chooseOpponent(preferred);
+  else renderSetup();
 }
 
 function applyTheme(theme) {
@@ -544,7 +667,7 @@ async function init() {
   buildPrefs();
   buildSetup();
   await refreshStatus();
-  fillModels();
+  fillOpponents();
   $("resign").addEventListener("click", onResign);
   $("new-game").addEventListener("click", showSetup);
   $("again").addEventListener("click", showSetup);
@@ -561,6 +684,8 @@ async function init() {
     }
   });
   setInterval(tick, 100);
+  // The server re-checks which CLIs are logged in every 30 s, so a login while this page is open shows up here.
+  setInterval(() => !$("setup").hidden && refreshStatus().then(fillOpponents), 15_000);
 }
 
 init();

@@ -31,7 +31,7 @@ ChessBench is the best existing anchored baseline. Its rows show the price of re
 - [dynomight (2024)](https://dynomight.net/more-chess) found that chat formatting hurts. Making the model repeat the game so far, plus three short examples, raised gpt-4o to about 1540. Giving the legal-move list hurt in those tests.
 - ChessArena found the opposite for legality. The legal-move list raised first-try legality from about 70% to over 97%. The two results conflict, so test both.
 - Game Arena sends FEN and PGN together, because some models read movetext more reliably than FEN.
-- A rules-only verifier in the loop ([arXiv 2605.17565](https://arxiv.org/abs/2605.17565)) raised move validity from 19.3% to 95.3% for a 3B model.
+- A verifier loop ([arXiv 2605.17565](https://arxiv.org/abs/2605.17565)) raised move validity from 19.3% to 95.3% for a 3B model. Its second critic uses Stockfish, so it is not a rules-only result, and the paper has no legality-only ablation.
 - Retry counts per game differ by more than 25 times between model families in Game Arena. The latency model has to include retries.
 - [Karvonen (2024)](https://adamkarvonen.github.io/machine_learning/2024/01/03/chess-world-models.html) showed that a 50M PGN-trained model holds a linear board representation. That result is background only.
 
