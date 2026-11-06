@@ -1,0 +1,103 @@
+60 positions: 40 critical, 20 quiet
+gemini spent so far $0.0000 of $1.00
+codex  v2     g014   11.9s O-O
+codex  v1     g014   34.2s ValueError: no legal answer: '{"move":"O-O"}'
+codex  v2     g016   25.7s Qh5
+codex  v1     g016   48.0s ValueError: no legal answer: '{"move":"Qh5"}'
+codex  v2     g018   21.3s Nf3
+codex  v1     g018   55.7s ValueError: no legal answer: '{"move":"Nxe6"}'
+codex  v2     g020   39.4s Qh5+
+codex  v1     g020   56.9s ValueError: no legal answer: '{"move":"Qh5+"}'
+codex  v2     g022   15.1s Bxg5
+codex  v2     p014   25.4s axb5
+codex  v1     g022   52.0s ValueError: no legal answer: '{"move":"Bxg5"}'
+codex  v2     p028    9.1s Qxa6
+codex  v1     p028   20.1s ValueError: no legal answer: '{"move":"Qxa6"}'
+codex  v1     p014   57.6s ValueError: no legal answer: '{"move":"axb5"}'
+codex  v2     p049    8.9s O-O
+codex  v2     p064   32.6s Ra5
+codex  v1     p049   56.3s ValueError: no legal answer: '{"move":"O-O"}'
+codex  v1     p064   46.1s ValueError: no legal answer: '{"move":"Ra5"}'
+codex  v2     p080   41.1s h3
+codex  v1     p080   60.7s ValueError: no legal answer: '{"move":"Kf1"}'
+codex  v1     p085   63.0s ValueError: no legal answer: '{"move":"Qg5"}'
+codex  v2     p085   44.4s Bxf4
+codex  v2     p098   38.0s Nf3
+codex  v2     p111   14.5s Nb5
+codex  v1     p098   64.4s ValueError: no legal answer: '{"move":"Nd7"}'
+codex  v1     p111   35.7s ValueError: no legal answer: '{"move":"Nb5"}'
+codex  v2     p117   35.0s Bxh7+
+codex  v1     p120   64.8s ValueError: no legal answer: '{"move":"Qxa8"}'
+codex  v2     p120   44.8s Qxa8
+codex  v1     p117   86.1s ValueError: no legal answer: '{"move":"Qc8+"}'
+codex  v2     p160   15.8s Bxe2
+codex  v1     p179   46.9s ValueError: no legal answer: '{"move":"Rxf7"}'
+codex  v2     p179   45.7s Rxf7
+codex  v1     p160   80.2s ValueError: no legal answer: '{"move":"Ne4"}'
+codex  v2     p196   45.7s Nf6
+codex  v1     p196   67.1s ValueError: no legal answer: '{"move":"Rxh4"}'
+codex  v1     p002   58.3s ValueError: no legal answer: '{"move":"Qf2+"}'
+codex  v2     p002   35.5s Qf2+
+codex  v2     p018   25.3s Re1
+codex  v2     p020   13.7s Nc4
+codex  v1     p018   80.7s ValueError: no legal answer: '{"move":"d3"}'
+codex  v1     p020   64.5s ValueError: no legal answer: '{"move":"Nc4"}'
+codex  v2     p042   17.2s h6
+codex  v1     p042   60.5s ValueError: no legal answer: '{"move":"Nc5"}'
+codex  v2     p055   39.9s dxc5
+codex  v1     p055   65.9s ValueError: no legal answer: '{"move":"dxc5"}'
+codex  v1     p056   51.7s ValueError: no legal answer: '{"move":"Nxd4"}'
+codex  v2     p056   27.3s g6
+codex  v2     p066   24.9s Rfd8
+codex  v1     p066   41.7s ValueError: no legal answer: '{"move":"Nd4"}'
+codex  v1     p071   61.2s ValueError: no legal answer: '{"move":"Rfc8"}'
+codex  v2     p071   43.1s Rfc8
+codex  v1     p088   19.2s ValueError: no legal answer: '{"move":"e4"}'
+codex  v1     p077   59.2s ValueError: no legal answer: '{"move":"Qf4"}'
+codex  v2     p077   36.1s Qf4
+codex  v2     p088   16.6s e4
+codex  v1     p099   20.0s ValueError: no legal answer: '{"move":"cxd4"}'
+codex  v2     p091   27.8s Kg4
+codex  v2     p099   10.7s cxd4
+codex  v1     p091   53.8s ValueError: no legal answer: '{"move":"Kg4"}'
+codex  v2     p116   34.8s Bb3
+codex  v2     p121   21.0s Qf5
+codex  v1     p116   72.7s ValueError: no legal answer: '{"move":"Nf6+"}'
+codex  v1     p121   72.2s ValueError: no legal answer: '{"move":"Rh8"}'
+codex  v1     p134   61.9s ValueError: no legal answer: '{"move":"d4"}'
+codex  v2     p134   51.4s Rxa2
+codex  v1     p150   69.0s ValueError: no legal answer: '{"move":"Nf6"}'
+codex  v2     p150   45.0s Nf6
+codex  v2     p151   16.4s Qxa5
+codex  v1     p151   54.0s ValueError: no legal answer: '{"move":"Qxa5"}'
+codex  v2     p153   22.1s Kxb7
+codex  v1     p153   53.2s ValueError: no legal answer: '{"move":"Kxb7"}'
+codex  v2     p171   38.8s f4
+codex  v1     p171   65.9s ValueError: no legal answer: '{"move":"f4"}'
+codex  v1     p191   34.4s ValueError: no legal answer: '{"move":"dxe4"}'
+codex  v2     p191   17.8s dxe4
+codex  v2     p015   14.1s Bd3
+codex  v2     p016   25.8s Nc5
+codex  v1     p015   61.1s ValueError: no legal answer: '{"move":"Bxd7+"}'
+codex  v2     p000   13.8s b5
+codex  v1     p016   64.8s ValueError: no legal answer: '{"move":"f4"}'
+codex  v1     p000   27.2s ValueError: no legal answer: '{"move":"b5"}'
+codex  v2     p001   24.1s O-O
+codex  v2     p003   15.2s Nc3
+codex  v1     p003   42.4s ValueError: no legal answer: '{"move":"Nc3"}'
+codex  v1     p001   63.2s ValueError: no legal answer: '{"move":"O-O"}'
+codex  v2     p004   35.0s Qa1+
+codex  v1     p004   60.4s ValueError: no legal answer: '{"move":"Ng4"}'
+codex  v2     p005   30.1s Kf8
+codex  v1     p005   60.6s ValueError: no legal answer: '{"move":"Kf8"}'
+codex  v2     p006   18.3s Kf7
+codex  v1     p006   33.7s ValueError: no legal answer: '{"move":"Kf7"}'
+codex  v2     p007   45.3s Be6
+codex  v2     p008   10.6s Ka6
+codex  v1     p007   64.2s ValueError: no legal answer: '{"move":"Nd6"}'
+codex  v1     p008   66.0s ValueError: no legal answer: '{"move":"Ka6"}'
+codex  v2     p010   27.0s Qe6
+codex  v1     p010   60.5s ValueError: no legal answer: '{"move":"Qd8"}'
+codex  v2     p019   54.4s Bf1
+codex  v1     p019   71.8s ValueError: no legal answer: '{"move":"Kh1"}'
+codex  v1     p021   61.2s ValueError: no legal answer: '{"move":"Qf7"}'

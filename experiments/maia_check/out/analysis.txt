@@ -1,0 +1,35 @@
+== Target A. Opus v2 at low effort blunders (loss >= 10 win%), all 60 positions
+  n=60, blunders=10
+  Maia expected loss (primary)                 AUC 0.69  [0.52, 0.85]
+  Maia blunder probability                     AUC 0.73  [0.56, 0.89]
+  Maia policy entropy                          AUC 0.59  [0.41, 0.77]
+  rules: position critical                     AUC 0.47  [0.29, 0.64]
+  rules: Opus's move fails the check           AUC 0.53  [0.46, 0.64]
+  legal move count                             AUC 0.73  [0.55, 0.89]
+  Opus disagreement: v1 prompt vs v2 prompt    AUC 0.59  [0.42, 0.77]
+  Opus disagreement: second opinion (n=40)     AUC 0.73  [0.57, 0.88]
+  Maia expected loss on the same 40            AUC 0.63  [0.43, 0.81]
+  Maia rank + v1/v2 disagreement rank          AUC 0.61  [0.42, 0.81]
+
+== Target B. Any Opus answer blundered, pooling every graded Opus call per position
+  n=60, positions with a blunder=14, Opus answers per position median=3.0
+  Maia expected loss (primary)                 AUC 0.72  [0.58, 0.85]
+  Maia blunder probability                     AUC 0.76  [0.61, 0.88]
+  Maia policy entropy                          AUC 0.68  [0.53, 0.83]
+  rules: position critical                     AUC 0.51  [0.36, 0.66]
+  legal move count                             AUC 0.72  [0.56, 0.87]
+  Spearman(Maia expected loss, Opus blunder rate) = +0.09
+
+== Sanity. Does Maia see 'only one move works'? (Stockfish gap between best and second best)
+  Spearman(Maia exp_loss, gap) = -0.00
+  Spearman(Maia p_blunder, gap) = +0.33
+  Spearman(Maia entropy, gap) = -0.22
+  Spearman(Maia exp_loss, move number) = -0.30
+
+== Confounds. Is Maia only counting legal moves, and does it add to the second opinion?
+  Spearman(Maia expected loss, legal count) = +0.65
+  Spearman(Maia blunder probability, legal count) = +0.54
+  Maia expected loss, legal count removed      AUC 0.54  [0.32, 0.76]
+  Maia blunder probability, legal count removed AUC 0.62  [0.41, 0.82]
+  second opinion + Maia expected loss (rank sum, n=40) AUC 0.77  [0.61, 0.91]
+  second opinion + Maia blunder probability (rank sum, n=40) AUC 0.83  [0.68, 0.95]

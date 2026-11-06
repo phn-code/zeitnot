@@ -1,0 +1,9 @@
+{
+  "move": ["move-1.mp3", "move-2.mp3", "move-3.mp3"],
+  "capture": ["capture-1.mp3", "capture-2.mp3", "capture-3.mp3", "capture-4.mp3"],
+  "promote": ["promote-1.mp3"],
+  "check": ["check-1.mp3"],
+  "start": ["start-1.mp3"],
+  "end": ["end-1.mp3"],
+  "lowtime": ["lowtime-1.mp3"]
+}

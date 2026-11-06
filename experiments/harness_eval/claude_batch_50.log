@@ -1,0 +1,55 @@
+50 positions: 40 critical, 10 quiet
+gemini spent so far $0.0000 of $1.00
+claude v2     p000    6.1s b5
+claude v1     p000    7.3s b5
+claude v2     p001    8.1s Nxe4
+claude v1     p001   11.6s Bxd2
+claude v2     p003    6.7s Nc3
+claude v1     p003   10.2s Nc3
+claude v2     p004    9.4s Qc7
+claude v1     p004   11.3s Qe7
+claude v2     p005    8.4s Kd8
+claude v1     p005   10.5s Kd8
+claude v2     p006    6.0s Kf7
+claude v1     p006   11.5s Kf7
+claude v1     p007   10.7s Bc6
+claude v2     p007    8.6s Be6
+claude v1     p008    8.3s Ka6
+claude v2     p008    7.8s Ka6
+claude v2     p010   10.5s Qe6
+claude v1     p010   12.4s Qe6
+claude v1     p019    7.9s Nh2
+claude v2     p019   12.3s Bf1
+2 verify calls needed
+claude verify p008    8.8s Kc4
+graded 50 positions at depth 16 in 0s
+# Harness eval
+
+50 positions (40 critical, 10 quiet). Loss is the drop in win probability against Stockfish 19's best move at depth 16. Blunder means a loss of 30 or more. Intervals are 95% bootstrap intervals of the mean. Seconds are wall clock per call, with the configured number of calls in flight. The search arm runs on critical positions only, so compare it with the other arms in the critical table; its seconds cover all of its calls, up to seven, three at a time.
+
+## All positions
+
+| Engine | Arm | n | Mean loss (95% CI) | Blunders | vs v1, paired (95% CI) | Mean s | Total $ | $/move |
+|---|---|---|---|---|---|---|---|---|
+| claude | v1 | 50 | 9.4 (4.9 to 14.7) | 6 |  | 10.6 | 0.0000 | 0.00000 |
+| claude | v2 | 50 | 8.5 (4.2 to 13.8) | 6 | -0.9 (-4.8 to +2.8) | 7.8 | 0.0000 | 0.00000 |
+| claude | v2+verify | 50 | 8.5 (4.2 to 13.8) | 6 | -0.9 (-4.8 to +2.8) | 8.2 | 0.0000 | 0.00000 |
+
+## Critical positions
+
+| Engine | Arm | n | Mean loss (95% CI) | Blunders | vs v1, paired (95% CI) | Mean s | Total $ | $/move |
+|---|---|---|---|---|---|---|---|---|
+| claude | v1 | 40 | 11.3 (6.1 to 17.7) | 6 |  | 10.8 | 0.0000 | 0.00000 |
+| claude | v2 | 40 | 10.2 (5.1 to 16.2) | 6 | -1.1 (-6.1 to +3.9) | 7.7 | 0.0000 | 0.00000 |
+| claude | v2+verify | 40 | 10.2 (5.1 to 16.2) | 6 | -1.1 (-6.1 to +3.9) | 7.9 | 0.0000 | 0.00000 |
+
+## Quiet positions
+
+| Engine | Arm | n | Mean loss (95% CI) | Blunders | vs v1, paired (95% CI) | Mean s | Total $ | $/move |
+|---|---|---|---|---|---|---|---|---|
+| claude | v1 | 10 | 1.7 (0.3 to 3.6) | 0 |  | 10.1 | 0.0000 | 0.00000 |
+| claude | v2 | 10 | 1.5 (0.0 to 3.3) | 0 | -0.3 (-0.6 to +0.0) | 8.4 | 0.0000 | 0.00000 |
+| claude | v2+verify | 10 | 1.5 (0.0 to 3.3) | 0 | -0.3 (-0.6 to +0.0) | 9.3 | 0.0000 | 0.00000 |
+
+claude: the rules check failed on 2 v2 answers; verify changed the move 1 times.
+

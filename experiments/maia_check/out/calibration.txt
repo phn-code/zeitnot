@@ -1,0 +1,9 @@
+n=300 of 1842 unique positions
+share below 1%: 0.46, at 10% or above: 0.22
+p_blunder p10=0.000 p25=0.002 p30=0.003 p50=0.014 p70=0.054 p75=0.082 p90=0.389
+exp_loss p10=0.006 p25=0.015 p30=0.017 p50=0.030 p70=0.046 p75=0.052 p90=0.083
+legal p10=21.000 p25=28.000 p30=30.000 p50=34.000 p70=38.000 p75=39.000 p90=45.000
+moves 6-8: n=51 median p_blunder=0.002 p75=0.024
+moves 9-15: n=115 median p_blunder=0.019 p75=0.090
+moves 16-25: n=77 median p_blunder=0.038 p75=0.152
+moves 26-99: n=57 median p_blunder=0.006 p75=0.034

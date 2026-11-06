@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>zeitnot</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='13' fill='none' stroke='%232c5b45' stroke-width='2' opacity='.4'/%3E%3Ccircle cx='16' cy='16' r='8' fill='%232c5b45'/%3E%3C/svg%3E">
+  <meta name="description" content="Play chess against an LLM that decides when to think, and watch it reason.">
+  <script>
+    // The theme is set before the first paint so the page never flashes the wrong colours.
+    (function () {
+      var saved = null;
+      try { saved = JSON.parse(localStorage.getItem("zeitnot.theme")); } catch (e) {}
+      var themes = ["paper", "slate", "night"];
+      // Paper, the light theme, unless the player picked another one.
+      document.documentElement.dataset.theme = themes.indexOf(saved) >= 0 ? saved : "paper";
+    })();
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cm-chessboard@8.15.4/assets/chessboard.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cm-chessboard@8.15.4/assets/extensions/promotion-dialog/promotion-dialog.css">
+  <link rel="stylesheet" href="themes.css">
+  <link rel="stylesheet" href="style.css">
+  <script type="module" src="app.js"></script>
+</head>
+<body>
+  <svg class="defs" aria-hidden="true" focusable="false">
+    <defs>
+      <radialGradient id="zn-gaze-fill">
+        <stop offset="0" class="gaze-core"/>
+        <stop offset="0.55" class="gaze-mid"/>
+        <stop offset="1" class="gaze-edge"/>
+      </radialGradient>
+      <radialGradient id="zn-check-fill">
+        <stop offset="0" class="check-core"/>
+        <stop offset="0.6" class="check-mid"/>
+        <stop offset="1" class="check-edge"/>
+      </radialGradient>
+    </defs>
+  </svg>
+
+  <header class="bar">
+    <span class="mark">zeitnot</span>
+    <span id="mode-badge" class="badge" hidden>fake model</span>
+    <div id="game-controls" class="game-controls" hidden>
+      <button id="resign" type="button" class="quiet">Resign</button>
+      <button id="new-game" type="button" class="quiet">New game</button>
+    </div>
+    <div class="prefs">
+      <button id="sound-toggle" type="button" class="icon" aria-label="Sound" aria-pressed="true">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path class="speaker" d="M4 9.5h3.2L12 5.5v13l-4.8-4H4z"/>
+          <path class="waves" d="M15.5 9a4.5 4.5 0 0 1 0 6M18 6.5a8 8 0 0 1 0 11"/>
+          <path class="mute" d="M16 9.5l5 5M21 9.5l-5 5"/>
+        </svg>
+      </button>
+      <input id="volume" class="volume" type="range" min="0" max="1" step="0.05" aria-label="Volume">
+      <div class="themes" role="group" aria-label="Theme">
+        <button type="button" data-theme-choice="paper" aria-label="Paper theme" title="Paper"></button>
+        <button type="button" data-theme-choice="slate" aria-label="Slate theme" title="Slate"></button>
+        <button type="button" data-theme-choice="night" aria-label="Night theme" title="Night"></button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section id="setup" class="setup">
+      <h1 class="wordmark">zeitnot</h1>
+      <p class="tagline">Play an LLM that decides when to think.</p>
+      <div class="field">
+        <span class="label" id="opponent-label">Opponent</span>
+        <div id="opponents" class="chips" role="group" aria-labelledby="opponent-label"></div>
+        <div id="setup-help" class="setup-help" hidden>
+          <p>No opponent is ready. Set up either one, and it appears here within a minute:</p>
+          <ul id="setup-help-lines"></ul>
+          <p>Until then you can play the free fake demo.</p>
+        </div>
+      </div>
+      <div class="field">
+        <span class="label">Time control</span>
+        <div id="presets" class="chips"></div>
+        <div id="custom" class="custom" hidden>
+          <label>Minutes <input id="minutes" type="number" min="0.5" step="0.5" inputmode="decimal"></label>
+          <label>Increment, seconds <input id="increment" type="number" min="0" step="1" inputmode="numeric"></label>
+        </div>
+        <p id="engine-hint" class="hint"></p>
+      </div>
+      <div class="field">
+        <span class="label">Side</span>
+        <div id="sides" class="chips"></div>
+      </div>
+
+      <button id="play" type="button" class="primary">Play</button>
+      <p class="credits">
+        <span>Board <a href="https://github.com/shaack/cm-chessboard">cm-chessboard</a> by Stefan Haack (MIT, markers CC BY-SA 3.0)</span> ·
+        <span>pieces by Cburnett, <a href="https://creativecommons.org/licenses/by-sa/3.0/">CC BY-SA 3.0</a></span> ·
+        <span>rules <a href="https://github.com/jhlywa/chess.js">chess.js</a> (BSD-2-Clause)</span> ·
+        <span>sounds by <a href="https://www.kenney.nl">Kenney</a> (CC0)</span>
+      </p>
+    </section>
+
+    <section id="game" class="game" hidden>
+      <div id="board-wrap" class="board-wrap">
+        <div id="board" class="board"></div>
+        <div id="end-card" class="end-card" role="dialog" aria-labelledby="end-title" hidden>
+          <p id="end-title" class="result"></p>
+          <dl id="end-stats" class="stats"></dl>
+          <div class="actions">
+            <button id="rematch" type="button" class="primary">Rematch</button>
+            <button id="again" type="button" class="quiet">New game</button>
+            <button id="copy-pgn" type="button" class="quiet">Copy PGN</button>
+          </div>
+        </div>
+      </div>
+
+      <aside id="mind" class="mind" aria-label="The model's thinking">
+        <header class="opponent">
+          <div class="orb" data-state="idle" data-tone="calm" aria-hidden="true">
+            <svg viewBox="0 0 48 48">
+              <circle class="ring-track" cx="24" cy="24" r="22"/>
+              <circle class="ring-fill" cx="24" cy="24" r="22" pathLength="1"/>
+              <g class="sparks"></g>
+            </svg>
+            <span class="core"></span>
+          </div>
+          <div class="who">
+            <span id="ai-name" class="name"></span>
+            <span class="sense" aria-live="polite"></span>
+            <span class="elapsed" aria-live="off"></span>
+          </div>
+          <span id="ai-clock" class="clock"></span>
+        </header>
+        <div class="stream"></div>
+        <div class="history"></div>
+        <footer class="player">
+          <span class="name">You</span>
+          <span id="human-clock" class="clock"></span>
+        </footer>
+      </aside>
+    </section>
+  </main>
+</body>
+</html>
