@@ -1,0 +1,612 @@
+sampled 200 positions from 31313 qualifying games
+522 API calls to run, $0.0008 already spent, cap $1.00
+warming connections (untimed, unlogged)
+p003 decisions-fen        0.19s $0.00005 Kc2  total $0.0009
+p003 decisions-rich       0.24s $0.00007 Kc2  total $0.0010
+p005 decisions-rich       0.24s $0.00005 Kd8  total $0.0010
+p004 decisions-rich       0.25s $0.00008 Qd5  total $0.0011
+p005 decisions-fen        0.29s $0.00003 Kd8  total $0.0011
+p006 decisions-fen        0.16s $0.00003 Kd7  total $0.0012
+p007 decisions-rich       0.14s $0.00007 Qa5  total $0.0012
+p007 decisions-fen        0.16s $0.00005 Qc7  total $0.0013
+p008 decisions-fen        0.14s $0.00003 Kc4  total $0.0013
+p004 decisions-fen        0.49s $0.00005 Qd4  total $0.0014
+p008 decisions-rich       0.16s $0.00008 Kc4  total $0.0014
+p009 decisions-fen        0.15s $0.00005 Bc4  total $0.0015
+p009 decisions-rich       0.14s $0.00007 Bc4  total $0.0016
+p006 decisions-rich       0.32s $0.00008 Kf7  total $0.0016
+p010 decisions-fen        0.15s $0.00004 Qd7  total $0.0017
+p010 decisions-rich       0.14s $0.00008 Qd7  total $0.0018
+p011 decisions-fen        0.16s $0.00006 Rd6  total $0.0018
+p012 decisions-rich       0.13s $0.00007 Qxf6  total $0.0019
+p012 decisions-fen        0.15s $0.00005 Qd5  total $0.0019
+p013 decisions-fen        0.15s $0.00005 Ndf6  total $0.0020
+p013 decisions-rich       0.15s $0.00008 Qe7  total $0.0021
+p014 decisions-fen        0.17s $0.00005 Ne5  total $0.0021
+p014 decisions-rich       0.15s $0.00008 Qb6  total $0.0022
+p015 decisions-fen        0.17s $0.00005 O-O  total $0.0023
+p011 decisions-rich       0.34s $0.00008 Qc3  total $0.0023
+p016 decisions-fen        0.23s $0.00004 Rxf5+  total $0.0024
+p015 decisions-rich       0.27s $0.00007 O-O  total $0.0024
+p017 decisions-fen        0.18s $0.00006 d5  total $0.0025
+p016 decisions-rich       0.21s $0.00008 Ke3  total $0.0026
+p017 decisions-rich       0.19s $0.00007 Bxb4  total $0.0027
+p018 decisions-fen        0.21s $0.00006 R3e7  total $0.0027
+p019 decisions-rich       0.15s $0.00008 Ne4  total $0.0028
+p020 decisions-fen        0.14s $0.00005 Qc5  total $0.0028
+p020 decisions-rich       0.15s $0.00008 Qc5  total $0.0029
+p021 decisions-fen        0.14s $0.00005 Qd6  total $0.0030
+p021 decisions-rich       0.15s $0.00007 Qf7  total $0.0030
+p022 decisions-fen        0.15s $0.00003 Kc5  total $0.0031
+p022 decisions-rich       0.19s $0.00007 Kc6  total $0.0031
+p023 decisions-fen        0.25s $0.00005 Qf4  total $0.0032
+p024 decisions-fen        0.15s $0.00005 Nbd2  total $0.0032
+p023 decisions-rich       0.16s $0.00008 Bxb4  total $0.0033
+p024 decisions-rich       0.17s $0.00006 Nbd2  total $0.0034
+p019 decisions-fen        0.57s $0.00005 Be2  total $0.0034
+p018 decisions-rich       0.57s $0.00009 R3e6  total $0.0035
+p026 decisions-fen        0.18s $0.00005 Nd6  total $0.0036
+p025 decisions-fen        0.19s $0.00005 Ne4  total $0.0036
+p025 decisions-rich       0.19s $0.00007 Rxc6  total $0.0037
+p027 decisions-rich       0.20s $0.00008 Rb7  total $0.0038
+p027 decisions-fen        0.20s $0.00005 Rb7  total $0.0038
+p028 decisions-fen        0.19s $0.00005 f5  total $0.0039
+p028 decisions-rich       0.20s $0.00007 Nxe4  total $0.0039
+p029 decisions-fen        0.20s $0.00004 Nd5  total $0.0040
+p026 decisions-rich       0.34s $0.00007 Nc5  total $0.0040
+p030 decisions-fen        0.17s $0.00003 Kb1  total $0.0041
+p029 decisions-rich       0.18s $0.00008 Nd5  total $0.0041
+p030 decisions-rich       0.15s $0.00006 Kb1  total $0.0042
+p031 decisions-fen        0.14s $0.00003 Qxe7  total $0.0042
+p032 decisions-fen        0.17s $0.00004 Rc8  total $0.0043
+p033 decisions-fen        0.22s $0.00005 Qd3  total $0.0043
+p034 decisions-fen        0.17s $0.00005 Qb2+  total $0.0044
+p031 decisions-rich       0.31s $0.00006 Qxe7  total $0.0044
+p033 decisions-rich       0.23s $0.00008 Qd3  total $0.0045
+p034 decisions-rich       0.17s $0.00009 Qb3+  total $0.0046
+p032 decisions-rich       0.36s $0.00007 Rd8  total $0.0047
+p035 decisions-fen        0.17s $0.00004 e5  total $0.0047
+p035 decisions-rich       0.18s $0.00007 Ne4  total $0.0048
+p037 decisions-fen        0.17s $0.00005 O-O  total $0.0048
+p037 decisions-rich       0.16s $0.00007 O-O  total $0.0049
+p038 decisions-fen        0.14s $0.00003 Kf5  total $0.0049
+p038 decisions-rich       0.14s $0.00008 Kxh5  total $0.0050
+p036 decisions-fen        0.32s $0.00005 Qf6+  total $0.0051
+p039 decisions-rich       0.15s $0.00006 d4  total $0.0051
+p036 decisions-rich       0.44s $0.00008 Qf6+  total $0.0052
+p040 decisions-rich       0.18s $0.00006 Nc3  total $0.0053
+p039 decisions-fen        0.34s $0.00005 Nf3  total $0.0053
+p040 decisions-fen        0.32s $0.00005 Nc3  total $0.0054
+p042 decisions-fen        0.13s $0.00005 Nd5  total $0.0054
+p041 decisions-rich       0.22s $0.00009 Bxf7+  total $0.0055
+p043 decisions-fen        0.17s $0.00005 e6  total $0.0056
+p043 decisions-rich       0.14s $0.00008 exf6  total $0.0056
+p044 decisions-rich       0.15s $0.00008 Nxg4  total $0.0057
+p042 decisions-rich       0.32s $0.00008 Nd5  total $0.0058
+p041 decisions-fen        0.49s $0.00006 Qf8+  total $0.0059
+p044 decisions-fen        0.27s $0.00005 f5  total $0.0059
+p045 decisions-fen        0.17s $0.00005 d5  total $0.0060
+p045 decisions-rich       0.17s $0.00007 Nbd7  total $0.0060
+p046 decisions-fen        0.18s $0.00004 Nc5+  total $0.0061
+p047 decisions-fen        0.18s $0.00005 Nd4  total $0.0061
+p048 decisions-fen        0.37s $0.00005 O-O  total $0.0062
+p049 decisions-fen        0.28s $0.00005 O-O  total $0.0062
+p046 decisions-rich       0.51s $0.00007 Kf1  total $0.0063
+p047 decisions-rich       0.48s $0.00007 Nd4  total $0.0064
+p050 decisions-fen        0.18s $0.00005 Qg6  total $0.0064
+p049 decisions-rich       0.47s $0.00007 Qd4  total $0.0065
+p051 decisions-fen        0.21s $0.00005 Nxd5  total $0.0065
+p050 decisions-rich       0.27s $0.00008 Kb1  total $0.0066
+p051 decisions-rich       0.18s $0.00007 Nxe4  total $0.0067
+p052 decisions-rich       0.21s $0.00007 Rc6  total $0.0067
+p053 decisions-fen        0.18s $0.00005 Nfxd4  total $0.0068
+p053 decisions-rich       0.17s $0.00007 Ncxd4  total $0.0069
+p054 decisions-fen        0.17s $0.00004 Kd4  total $0.0069
+p052 decisions-fen        0.31s $0.00004 Rc7  total $0.0069
+p048 decisions-rich       0.91s $0.00007 Nfd7  total $0.0070
+p056 decisions-rich       0.32s $0.00007 Nxd4  total $0.0071
+p054 decisions-rich       0.42s $0.00008 Kd4  total $0.0072
+p056 decisions-fen        0.47s $0.00005 Qe6  total $0.0072
+p055 decisions-rich       0.54s $0.00008 Qxb4  total $0.0073
+p057 decisions-fen        0.44s $0.00004 Ne5  total $0.0073
+p058 decisions-fen        0.19s $0.00005 Nxe6  total $0.0074
+p057 decisions-rich       0.27s $0.00006 Nc5  total $0.0074
+p058 decisions-rich       0.19s $0.00007 Nb5  total $0.0075
+p059 decisions-rich       0.17s $0.00008 Re6  total $0.0076
+p060 decisions-fen        0.16s $0.00006 Qf4  total $0.0076
+p055 decisions-fen        0.75s $0.00005 Qxd7+  total $0.0077
+p059 decisions-fen        0.25s $0.00005 Rd4  total $0.0077
+p060 decisions-rich       0.17s $0.00008 Bxe5  total $0.0078
+p061 decisions-fen        0.19s $0.00003 Qe3  total $0.0079
+p062 decisions-fen        0.14s $0.00006 Bxd2+  total $0.0079
+p062 decisions-rich       0.16s $0.00008 Qg4  total $0.0080
+p061 decisions-rich       0.18s $0.00005 Kd1  total $0.0081
+p063 decisions-rich       0.17s $0.00008 Qc3  total $0.0081
+p063 decisions-fen        0.19s $0.00006 Qd3  total $0.0082
+p064 decisions-rich       0.18s $0.00008 Rd5+  total $0.0083
+p065 decisions-fen        0.16s $0.00003 Qd7  total $0.0083
+p065 decisions-rich       0.16s $0.00005 bxc6  total $0.0084
+p066 decisions-rich       0.22s $0.00008 Qe3  total $0.0084
+p067 decisions-rich       0.16s $0.00008 Qg8+  total $0.0085
+p067 decisions-fen        0.18s $0.00005 Qxd7  total $0.0086
+p068 decisions-fen        0.16s $0.00005 d5  total $0.0086
+p064 decisions-fen        0.40s $0.00004 Rd5+  total $0.0087
+p066 decisions-fen        0.33s $0.00005 Qe3  total $0.0087
+p069 decisions-fen        0.22s $0.00005 Nbd7  total $0.0088
+p069 decisions-rich       0.20s $0.00007 Nbd7  total $0.0088
+p068 decisions-rich       0.24s $0.00007 d5  total $0.0089
+p070 decisions-rich       0.23s $0.00008 Qd6  total $0.0090
+p070 decisions-fen        0.25s $0.00005 Qd6  total $0.0090
+p072 decisions-rich       0.15s $0.00006 Bxc3+  total $0.0091
+p072 decisions-fen        0.18s $0.00005 Nd4  total $0.0091
+p071 decisions-fen        0.30s $0.00005 Ne4  total $0.0092
+p073 decisions-rich       0.17s $0.00009 Qxg7+  total $0.0093
+p071 decisions-rich       0.23s $0.00007 Ne4  total $0.0094
+p073 decisions-fen        0.26s $0.00006 Qxg7+  total $0.0094
+p074 decisions-fen        0.18s $0.00004 Kf3  total $0.0095
+p075 decisions-fen        0.16s $0.00005 Qg5  total $0.0095
+p074 decisions-rich       0.19s $0.00007 Kf3  total $0.0096
+p076 decisions-fen        0.15s $0.00005 Ne4  total $0.0096
+p075 decisions-rich       0.16s $0.00007 Nbxd4  total $0.0097
+p079 decisions-fen        0.23s $0.00005 Ne4  total $0.0098
+p077 decisions-fen        0.36s $0.00005 Rxe6  total $0.0098
+p078 decisions-fen        0.37s $0.00005 Ne5  total $0.0098
+p080 decisions-fen        0.14s $0.00004 Rd7+  total $0.0099
+p079 decisions-rich       0.24s $0.00008 d4  total $0.0100
+p080 decisions-rich       0.14s $0.00008 Rd4  total $0.0100
+p081 decisions-fen        0.14s $0.00005 d5  total $0.0101
+p082 decisions-fen        0.16s $0.00003 Rg1  total $0.0101
+p078 decisions-rich       0.83s $0.00007 Ne7  total $0.0102
+p083 decisions-fen        0.19s $0.00005 Ra2+  total $0.0102
+p076 decisions-rich       0.94s $0.00007 Rdg1  total $0.0103
+p077 decisions-rich       0.96s $0.00008 Re4  total $0.0104
+p084 decisions-rich       0.15s $0.00006 g3  total $0.0105
+p081 decisions-rich       0.57s $0.00006 Be7  total $0.0105
+p085 decisions-fen        0.16s $0.00005 Qd6  total $0.0106
+p083 decisions-rich       0.26s $0.00009 Ne5  total $0.0107
+p084 decisions-fen        0.31s $0.00005 d5  total $0.0107
+p082 decisions-rich       0.57s $0.00007 Kd2  total $0.0108
+p086 decisions-fen        0.16s $0.00005 Qb3+  total $0.0108
+p086 decisions-rich       0.15s $0.00008 Qb2+  total $0.0109
+p087 decisions-fen        0.15s $0.00005 Qe5  total $0.0110
+p085 decisions-rich       0.28s $0.00008 Qe4  total $0.0110
+p087 decisions-rich       0.14s $0.00007 Nd3  total $0.0111
+p088 decisions-rich       0.16s $0.00007 d4  total $0.0112
+p089 decisions-fen        0.17s $0.00005 Nf6  total $0.0112
+p089 decisions-rich       0.19s $0.00007 Kxg7  total $0.0113
+p090 decisions-fen        0.25s $0.00005 Qf4+  total $0.0114
+p091 decisions-fen        0.20s $0.00004 Be3  total $0.0114
+p091 decisions-rich       0.20s $0.00008 Kg4  total $0.0115
+p090 decisions-rich       0.37s $0.00009 Qf4+  total $0.0116
+p092 decisions-fen        0.26s $0.00005 O-O  total $0.0116
+p088 decisions-fen        0.57s $0.00006 Nd4  total $0.0117
+p093 decisions-fen        0.29s $0.00005 Bxe6+  total $0.0117
+p092 decisions-rich       0.31s $0.00007 exd4  total $0.0118
+p095 decisions-fen        0.25s $0.00005 O-O  total $0.0119
+p094 decisions-fen        0.32s $0.00005 Nf6  total $0.0119
+p094 decisions-rich       0.34s $0.00007 Bxa1  total $0.0120
+p096 decisions-fen        0.23s $0.00004 Rc7  total $0.0120
+p095 decisions-rich       0.31s $0.00007 O-O  total $0.0121
+p096 decisions-rich       0.27s $0.00008 Nd4  total $0.0122
+p093 decisions-rich       0.81s $0.00007 Nb6+  total $0.0123
+p097 decisions-fen        0.43s $0.00005 Nf3+  total $0.0123
+p097 decisions-rich       0.43s $0.00008 Nf3+  total $0.0124
+p098 decisions-fen        0.40s $0.00005 Qxg7+  total $0.0124
+p099 decisions-fen        0.28s $0.00005 Bd6  total $0.0125
+p100 decisions-rich       0.18s $0.00008 Kd7  total $0.0126
+p001 responses-low        8.40s $0.00041 Bxd2  total $0.0130
+p101 decisions-fen        0.20s $0.00005 O-O  total $0.0130
+p101 decisions-rich       0.16s $0.00007 O-O  total $0.0131
+p100 decisions-fen        0.28s $0.00004 Kd7  total $0.0131
+p099 decisions-rich       0.31s $0.00007 Bxd5  total $0.0132
+p102 decisions-fen        0.15s $0.00005 Qd3  total $0.0132
+p103 decisions-fen        0.14s $0.00004 Rc7  total $0.0133
+p102 decisions-rich       0.15s $0.00007 Qd3  total $0.0134
+p103 decisions-rich       0.15s $0.00008 Kb3  total $0.0134
+p104 decisions-fen        0.16s $0.00005 Bxd5  total $0.0135
+p104 decisions-rich       0.16s $0.00008 Bxf3  total $0.0136
+p098 decisions-rich       0.82s $0.00008 Qf3  total $0.0136
+p105 decisions-rich       0.15s $0.00007 Nf5  total $0.0137
+p106 decisions-rich       0.16s $0.00008 e6  total $0.0138
+p106 decisions-fen        0.21s $0.00005 Qf3  total $0.0139
+p105 decisions-fen        0.23s $0.00005 Nf5  total $0.0139
+p107 decisions-fen        0.17s $0.00004 Ke4  total $0.0139
+p107 decisions-rich       0.13s $0.00007 Kd3  total $0.0140
+p108 decisions-fen        0.15s $0.00003 Qxe1  total $0.0140
+p108 decisions-rich       0.28s $0.00006 Qxe1  total $0.0141
+p109 decisions-fen        0.32s $0.00004 Rb5+  total $0.0141
+p109 decisions-rich       0.36s $0.00008 Rb5+  total $0.0142
+p111 decisions-fen        0.29s $0.00004 Ne4  total $0.0143
+p110 decisions-fen        0.35s $0.00005 Ne4  total $0.0143
+p110 decisions-rich       0.38s $0.00008 Qxb4  total $0.0144
+p111 decisions-rich       0.35s $0.00006 Ne4  total $0.0145
+p114 decisions-fen        0.27s $0.00004 Ne5  total $0.0145
+p112 decisions-rich       0.33s $0.00008 Ke3  total $0.0146
+p114 decisions-rich       0.21s $0.00008 Nd6  total $0.0147
+p115 decisions-rich       0.26s $0.00006 Kc2  total $0.0147
+p115 decisions-fen        0.26s $0.00003 Kc2  total $0.0148
+p113 decisions-rich       0.82s $0.00006 Bd3  total $0.0148
+p113 decisions-fen        0.83s $0.00005 Be2  total $0.0149
+p116 decisions-fen        0.39s $0.00006 Qd6  total $0.0149
+p112 decisions-fen        0.90s $0.00004 Rxe4  total $0.0150
+p116 decisions-rich       0.49s $0.00008 Qd6  total $0.0150
+p117 decisions-rich       0.38s $0.00008 Qxf7+  total $0.0151
+p119 decisions-fen        0.37s $0.00006 Qd4  total $0.0152
+p118 decisions-rich       0.38s $0.00008 Nd4  total $0.0153
+p118 decisions-fen        0.39s $0.00006 Nd4  total $0.0153
+p120 decisions-fen        0.22s $0.00006 Qxf5+  total $0.0154
+p120 decisions-rich       0.22s $0.00008 Qxf5+  total $0.0155
+p121 decisions-fen        0.23s $0.00005 Nc5  total $0.0155
+p117 decisions-fen        0.90s $0.00006 Qxf7+  total $0.0156
+p121 decisions-rich       0.27s $0.00008 Qxd4  total $0.0157
+p119 decisions-rich       0.45s $0.00009 Qxf5  total $0.0157
+p122 decisions-fen        0.18s $0.00004 Qe1+  total $0.0158
+p122 decisions-rich       0.18s $0.00009 Qe1+  total $0.0159
+p123 decisions-rich       0.14s $0.00007 Rd8  total $0.0159
+p124 decisions-fen        0.14s $0.00003 Ka2  total $0.0160
+p123 decisions-fen        0.18s $0.00005 Nxe4  total $0.0160
+p124 decisions-rich       0.16s $0.00008 Kc1  total $0.0161
+p126 decisions-fen        0.11s $0.00005 Qxe5  total $0.0162
+p125 decisions-rich       0.14s $0.00006 O-O  total $0.0162
+p125 decisions-fen        0.17s $0.00005 O-O  total $0.0163
+p126 decisions-rich       0.20s $0.00007 Qxe5  total $0.0163
+p127 decisions-fen        0.24s $0.00005 Qd6  total $0.0164
+p127 decisions-rich       0.21s $0.00007 Qe6  total $0.0165
+p128 decisions-fen        0.30s $0.00005 Nbd7  total $0.0165
+p129 decisions-fen        0.28s $0.00005 Qxd6+  total $0.0166
+p129 decisions-rich       0.28s $0.00007 Nf3  total $0.0166
+p128 decisions-rich       0.37s $0.00006 Nd5  total $0.0167
+p131 decisions-rich       0.16s $0.00007 Rbc8  total $0.0168
+p130 decisions-fen        0.35s $0.00005 Bxe4  total $0.0168
+p130 decisions-rich       0.36s $0.00007 Bxe4  total $0.0169
+p132 decisions-fen        0.14s $0.00004 Kc3  total $0.0169
+p131 decisions-fen        0.23s $0.00005 e5  total $0.0170
+p132 decisions-rich       0.16s $0.00007 Kc3  total $0.0170
+p133 decisions-rich       0.17s $0.00008 Rc4+  total $0.0171
+p134 decisions-fen        0.16s $0.00005 Rc1+  total $0.0172
+p133 decisions-fen        0.18s $0.00005 Rc4+  total $0.0172
+p135 decisions-fen        0.15s $0.00005 Qxe3+  total $0.0173
+p134 decisions-rich       0.18s $0.00008 Rc1+  total $0.0173
+p136 decisions-rich       0.17s $0.00008 Qe5  total $0.0174
+p136 decisions-fen        0.18s $0.00006 Ne5  total $0.0175
+p137 decisions-rich       0.25s $0.00006 Nd4  total $0.0175
+p137 decisions-fen        0.26s $0.00005 Nd5  total $0.0176
+p138 decisions-fen        0.44s $0.00005 Qxb3  total $0.0176
+p139 decisions-rich       0.27s $0.00008 Rxb4  total $0.0177
+p140 decisions-fen        0.29s $0.00005 Qa4+  total $0.0178
+p135 decisions-rich       0.71s $0.00008 Qb4  total $0.0178
+p141 decisions-fen        0.23s $0.00005 Qd6  total $0.0179
+p141 decisions-rich       0.23s $0.00007 Qxe5+  total $0.0180
+p140 decisions-rich       0.33s $0.00006 d5  total $0.0180
+p142 decisions-fen        0.21s $0.00004 Rf3  total $0.0181
+p142 decisions-rich       0.14s $0.00007 Nd4  total $0.0181
+p143 decisions-fen        0.16s $0.00004 Nd2  total $0.0182
+p138 decisions-rich       0.78s $0.00008 Qxb3  total $0.0183
+p144 decisions-fen        0.18s $0.00005 b3  total $0.0183
+p143 decisions-rich       0.18s $0.00007 Nd2  total $0.0184
+p144 decisions-rich       0.15s $0.00007 bxc3  total $0.0185
+p145 decisions-fen        0.14s $0.00005 Rxa2  total $0.0185
+p145 decisions-rich       0.17s $0.00008 Bc3  total $0.0186
+p146 decisions-fen        0.15s $0.00004 Ke6  total $0.0186
+p146 decisions-rich       0.14s $0.00008 Ke6  total $0.0187
+p139 decisions-fen        0.99s $0.00005 Qe5  total $0.0188
+p147 decisions-fen        0.15s $0.00005 Ne5  total $0.0188
+p147 decisions-rich       0.17s $0.00006 e4  total $0.0189
+p148 decisions-fen        0.15s $0.00005 Nf3  total $0.0189
+p149 decisions-fen        0.15s $0.00004 Ne7  total $0.0190
+p149 decisions-rich       0.15s $0.00006 Rc8  total $0.0190
+p148 decisions-rich       0.23s $0.00007 Nf3  total $0.0191
+p150 decisions-fen        0.18s $0.00005 Rxe5  total $0.0191
+p150 decisions-rich       0.17s $0.00008 Re6  total $0.0192
+p151 decisions-fen        0.15s $0.00005 Rd2  total $0.0193
+p151 decisions-rich       0.17s $0.00007 bxc3  total $0.0193
+p152 decisions-fen        0.17s $0.00005 Bxf6  total $0.0194
+p152 decisions-rich       0.14s $0.00007 Bxf6  total $0.0195
+p153 decisions-fen        0.15s $0.00003 Kd8  total $0.0195
+p153 decisions-rich       0.15s $0.00007 Kd8  total $0.0196
+p154 decisions-fen        0.15s $0.00004 e4  total $0.0196
+p154 decisions-rich       0.16s $0.00006 Nxc4  total $0.0197
+p155 decisions-rich       0.16s $0.00008 Kd6  total $0.0197
+p155 decisions-fen        0.19s $0.00004 Kd6  total $0.0198
+p156 decisions-fen        0.17s $0.00005 Ne5  total $0.0198
+p157 decisions-fen        0.15s $0.00005 d5  total $0.0199
+p156 decisions-rich       0.16s $0.00007 Ne5  total $0.0199
+p157 decisions-rich       0.15s $0.00006 O-O  total $0.0200
+p158 decisions-fen        0.18s $0.00006 Rd6  total $0.0201
+p158 decisions-rich       0.17s $0.00008 Qd3  total $0.0201
+p159 decisions-fen        0.20s $0.00005 Nd7  total $0.0202
+p160 decisions-fen        0.20s $0.00005 Nd5  total $0.0202
+p160 decisions-rich       0.21s $0.00008 Rbc8  total $0.0203
+p159 decisions-rich       0.30s $0.00006 Nd5  total $0.0204
+p161 decisions-fen        0.28s $0.00006 Qd4  total $0.0204
+p161 decisions-rich       0.27s $0.00007 Bg4  total $0.0205
+p162 decisions-fen        0.23s $0.00005 Nd5  total $0.0206
+p162 decisions-rich       0.24s $0.00006 Nbd7  total $0.0206
+p163 decisions-fen        0.23s $0.00005 fxg4  total $0.0207
+p163 decisions-rich       0.18s $0.00007 Nxg4  total $0.0208
+p164 decisions-fen        0.18s $0.00005 Ne5  total $0.0208
+p165 decisions-rich       0.18s $0.00009 Ke6  total $0.0209
+p166 decisions-fen        0.19s $0.00005 d5  total $0.0209
+p166 decisions-rich       0.37s $0.00008 Qd2  total $0.0210
+p165 decisions-fen        0.49s $0.00004 Ke6  total $0.0211
+p164 decisions-rich       0.49s $0.00007 Bxe4  total $0.0211
+p168 decisions-fen        0.24s $0.00005 Nf6  total $0.0212
+p167 decisions-rich       0.31s $0.00007 Qb1  total $0.0213
+p168 decisions-rich       0.15s $0.00007 Nd7  total $0.0213
+p169 decisions-fen        0.16s $0.00005 d4  total $0.0214
+p169 decisions-rich       0.17s $0.00007 Nd4  total $0.0214
+p170 decisions-rich       0.16s $0.00007 Nxe5  total $0.0215
+p170 decisions-fen        0.18s $0.00005 Nxe5  total $0.0216
+p171 decisions-fen        0.16s $0.00005 Rxe5  total $0.0216
+p171 decisions-rich       0.19s $0.00007 Rd4  total $0.0217
+p172 decisions-fen        0.18s $0.00005 Qd3  total $0.0217
+p172 decisions-rich       0.25s $0.00008 Qxd5  total $0.0218
+p173 decisions-fen        0.25s $0.00005 Nc4+  total $0.0219
+p173 decisions-rich       0.39s $0.00007 Nd7  total $0.0219
+p174 decisions-rich       0.40s $0.00008 Rf7  total $0.0220
+p175 decisions-fen        0.30s $0.00005 Bg5  total $0.0221
+p167 decisions-fen        1.09s $0.00005 Bc3  total $0.0221
+p175 decisions-rich       0.43s $0.00007 Ba4  total $0.0222
+p176 decisions-fen        0.27s $0.00004 Kd6  total $0.0222
+p177 decisions-fen        0.20s $0.00005 Qd6  total $0.0223
+p176 decisions-rich       0.21s $0.00008 Rh7  total $0.0224
+p177 decisions-rich       0.31s $0.00007 Ne5  total $0.0224
+p178 decisions-fen        0.24s $0.00005 Bb4+  total $0.0225
+p178 decisions-rich       0.21s $0.00007 Rxb7  total $0.0225
+p179 decisions-fen        0.20s $0.00005 Qe4  total $0.0226
+p174 decisions-fen        0.81s $0.00005 Bxg2  total $0.0226
+p179 decisions-rich       0.20s $0.00009 Qd4  total $0.0227
+p180 decisions-fen        0.26s $0.00004 Kd8  total $0.0228
+p181 decisions-rich       0.19s $0.00008 Qxc6+  total $0.0229
+p182 decisions-rich       0.19s $0.00007 Bd7  total $0.0229
+p182 decisions-fen        0.22s $0.00005 Qxc3  total $0.0230
+p181 decisions-fen        0.23s $0.00005 Qxc6+  total $0.0230
+p180 decisions-rich       0.28s $0.00008 Re7  total $0.0231
+p183 decisions-fen        0.17s $0.00004 Rd7  total $0.0232
+p183 decisions-rich       0.16s $0.00009 Kf8  total $0.0232
+p184 decisions-fen        0.16s $0.00003 Ke5  total $0.0233
+p185 decisions-fen        0.14s $0.00006 Rxe8#  total $0.0233
+p185 decisions-rich       0.14s $0.00009 Rxe8#  total $0.0234
+p186 decisions-fen        0.13s $0.00004 Kd2  total $0.0235
+p186 decisions-rich       0.14s $0.00007 Nc6  total $0.0235
+p187 decisions-fen        0.17s $0.00005 d5  total $0.0236
+p184 decisions-rich       0.31s $0.00007 Ke5  total $0.0236
+p188 decisions-fen        0.23s $0.00005 O-O  total $0.0237
+p187 decisions-rich       0.31s $0.00006 Bxd4  total $0.0238
+p189 decisions-fen        0.27s $0.00005 Nd4  total $0.0238
+p188 decisions-rich       0.28s $0.00007 Nxh4  total $0.0239
+p189 decisions-rich       0.25s $0.00007 Nd4  total $0.0240
+p190 decisions-fen        0.25s $0.00005 Bd3  total $0.0240
+p191 decisions-fen        0.16s $0.00005 Nxe5  total $0.0241
+p190 decisions-rich       0.24s $0.00007 gxf3  total $0.0241
+p191 decisions-rich       0.17s $0.00007 Nxe5  total $0.0242
+p192 decisions-fen        0.17s $0.00003 Kxb3  total $0.0242
+p192 decisions-rich       0.16s $0.00008 Kb5  total $0.0243
+p193 decisions-fen        0.16s $0.00005 Nb5  total $0.0244
+p193 decisions-rich       0.11s $0.00007 Nb5  total $0.0244
+p194 decisions-fen        0.13s $0.00004 Kd3  total $0.0245
+p195 decisions-rich       0.16s $0.00006 Ne4  total $0.0245
+p195 decisions-fen        0.16s $0.00005 Ne4  total $0.0246
+p194 decisions-rich       0.17s $0.00007 Ke5  total $0.0247
+p196 decisions-fen        0.16s $0.00005 d5  total $0.0247
+p196 decisions-rich       0.16s $0.00007 Qxh4  total $0.0248
+p197 decisions-fen        0.13s $0.00004 Ke4  total $0.0248
+p199 decisions-rich       0.13s $0.00007 O-O  total $0.0249
+p198 decisions-rich       0.14s $0.00006 Bb7  total $0.0250
+p199 decisions-fen        0.15s $0.00005 d4  total $0.0250
+p197 decisions-rich       0.17s $0.00008 Bd1  total $0.0251
+p198 decisions-fen        0.16s $0.00005 Nf6  total $0.0251
+p001 responses-medium    39.93s $0.00166 Nxe4  total $0.0268
+p001 responses-none       1.25s $0.00007 Bxd2  total $0.0269
+p000 responses-medium    63.70s $0.00267 b5  total $0.0295
+p000 responses-high      90.51s $0.00421 b5  total $0.0337
+p002 responses-none       1.36s $0.00007 Qxd3+  total $0.0338
+p002 responses-medium    34.06s $0.00161 Qe3+  total $0.0354
+p002 responses-low       10.76s $0.00057 Qxg4+  total $0.0360
+p003 responses-low       19.31s $0.00063 Nc3  total $0.0366
+p002 responses-high      88.35s $0.00467 Qf2+  total $0.0413
+p003 responses-none       1.45s $0.00007 Bxg6+  total $0.0414
+p001 responses-high     151.48s $0.00610 O-O  total $0.0475Task exception was never retrieved
+future: <Task finished name='Task-539' coro=<AsyncClient.aclose() done, defined at /home/kitnguyen/chess_project/.venv/lib/python3.12/site-packages/httpx2/_client.py:2197> exception=RuntimeError('Event loop is closed')>
+Traceback (most recent call last):
+  File "/home/kitnguyen/chess_project/.venv/lib/python3.12/site-packages/httpx2/_client.py", line 2204, in aclose
+    await self._transport.aclose()
+  File "/home/kitnguyen/chess_project/.venv/lib/python3.12/site-packages/httpx2/_transports/default.py", line 400, in aclose
+    await self._pool.aclose()
+  File "/home/kitnguyen/chess_project/.venv/lib/python3.12/site-packages/httpcore2/_async/connection_pool.py", line 382, in aclose
+    await self._close_connections(closing_connections)
+  File "/home/kitnguyen/chess_project/.venv/lib/python3.12/site-packages/httpcore2/_async/connection_pool.py", line 374, in _close_connections
+    await connection.aclose()
+  File "/home/kitnguyen/chess_project/.venv/lib/python3.12/site-packages/httpcore2/_async/connection.py", line 157, in aclose
+    await self._connection.aclose()
+  File "/home/kitnguyen/chess_project/.venv/lib/python3.12/site-packages/httpcore2/_async/http11.py", line 236, in aclose
+    await self._network_stream.aclose()
+  File "/home/kitnguyen/chess_project/.venv/lib/python3.12/site-packages/httpcore2/_backends/anyio.py", line 56, in aclose
+    await self._stream.aclose()
+  File "/home/kitnguyen/chess_project/.venv/lib/python3.12/site-packages/anyio/streams/tls.py", line 262, in aclose
+    await self.transport_stream.aclose()
+  File "/home/kitnguyen/chess_project/.venv/lib/python3.12/site-packages/anyio/_backends/_asyncio.py", line 1499, in aclose
+    self._transport.abort()
+  File "/usr/lib/python3.12/asyncio/selector_events.py", line 836, in abort
+    self._force_close(None)
+  File "/usr/lib/python3.12/asyncio/selector_events.py", line 906, in _force_close
+    self._loop.call_soon(self._call_connection_lost, exc)
+  File "/usr/lib/python3.12/asyncio/base_events.py", line 795, in call_soon
+    self._check_closed()
+  File "/usr/lib/python3.12/asyncio/base_events.py", line 541, in _check_closed
+    raise RuntimeError('Event loop is closed')
+RuntimeError: Event loop is closed
+
+p000 responses-xhigh    162.76s $0.00639 Nd7+  total $0.0538
+p003 responses-medium    42.64s $0.00192 Kc1  total $0.0558
+p004 responses-low       13.68s $0.00050 Qxc5  total $0.0563
+p001 responses-xhigh    234.73s $0.00920 Ba3  total $0.0655
+p004 responses-medium    84.94s $0.00331 Qf5  total $0.0688
+p003 responses-xhigh    120.18s $0.00592 Rf1  total $0.0747
+p003 responses-high     100.31s $0.00526 c5  total $0.0800
+p004 responses-none       3.43s $0.00007 Qxc5  total $0.0800
+p002 responses-xhigh    164.73s $0.00841 Qf2+  total $0.0884
+p005 responses-none       1.46s $0.00004 Kd8  total $0.0885
+p005 responses-medium    16.00s $0.00070 Kd8  total $0.0892
+p005 responses-low        8.34s $0.00036 Kd8  total $0.0895
+p005 responses-high      27.48s $0.00098 Kd8  total $0.0905
+p006 responses-medium    18.13s $0.00090 Kf7  total $0.0914
+p006 responses-low        8.59s $0.00039 Kf7  total $0.0918
+p006 responses-none       1.14s $0.00007 Kf7  total $0.0919
+p006 responses-high      36.14s $0.00159 Kf7  total $0.0935
+p005 responses-xhigh     56.53s $0.00297 Kf8  total $0.0964
+p007 responses-none       1.49s $0.00006 Qe8  total $0.0965
+p006 responses-xhigh     31.27s $0.00156 Kf7  total $0.0980
+p007 responses-low       13.42s $0.00049 Bf5  total $0.0985
+p008 responses-low       10.54s $0.00052 Ka6  total $0.0991
+p008 responses-none       1.34s $0.00007 Kc4  total $0.0991
+p007 responses-medium    36.78s $0.00173 Be6  total $0.1009
+p008 responses-medium    24.87s $0.00093 Ka6  total $0.1018
+p008 responses-high      68.05s $0.00352 Ka6  total $0.1053
+p009 responses-medium     6.88s $0.00031 e5  total $0.1056
+p007 responses-high      95.07s $0.00432 Ne7  total $0.1099
+p008 responses-xhigh     53.81s $0.00256 Kc4  total $0.1125
+p004 responses-xhigh    252.87s $0.01056 Qe7  total $0.1230
+p009 responses-none       1.36s $0.00006 Qd6  total $0.1231
+p009 responses-low        7.12s $0.00035 e5  total $0.1234
+p010 responses-low       21.76s $0.00083 Qd8  total $0.1243
+p010 responses-medium    44.82s $0.00194 Qd8  total $0.1262
+p010 responses-none       1.59s $0.00007 Qe4  total $0.1263
+p011 responses-none       1.16s $0.00008 Rxg7+  total $0.1264
+p010 responses-high      69.34s $0.00333 Qf8  total $0.1297
+p009 responses-high     100.20s $0.00465 Bd3  total $0.1344
+p004 responses-high     262.88s $0.01191 Qa1+  total $0.1463
+p012 responses-none       1.46s $0.00007 Qxf6  total $0.1463
+p011 responses-low       10.00s $0.00047 Bxe6+  total $0.1468
+p012 responses-high       9.61s $0.00048 gxf6  total $0.1473
+p011 responses-medium    18.28s $0.00097 Bxe6+  total $0.1483
+p012 responses-low        3.93s $0.00018 Qxf6  total $0.1484
+p013 responses-none       1.54s $0.00007 Qxd5  total $0.1485
+p012 responses-medium     8.39s $0.00040 Qxf6  total $0.1489
+p013 responses-low       14.59s $0.00058 Ndf6  total $0.1495
+p013 responses-medium    28.31s $0.00136 Ndf6  total $0.1509
+p014 responses-none       1.44s $0.00007 Bxc3  total $0.1509
+p011 responses-high     111.11s $0.00565 Qc3  total $0.1566
+p007 responses-xhigh    310.01s $0.01606 status incomplete  total $0.1726
+p014 responses-low        5.38s $0.00025 Qxb5  total $0.1729
+p013 responses-high     101.13s $0.00559 Ngf6  total $0.1785
+p015 responses-low        7.91s $0.00031 Bxd7+  total $0.1788
+p015 responses-none       1.70s $0.00006 Bxd7+  total $0.1789
+p016 responses-none       1.43s $0.00007 Rxe6  total $0.1789
+p009 responses-xhigh    229.01s $0.00947 Bd3  total $0.1884
+p015 responses-medium    18.74s $0.00083 Bxd7+  total $0.1892
+p016 responses-low       12.36s $0.00056 Nf4  total $0.1898
+p017 responses-low       14.53s $0.00051 Bb6  total $0.1903
+p017 responses-none       1.33s $0.00007 Bxb4  total $0.1904
+p014 responses-medium   126.62s $0.00658 Be7  total $0.1969
+p017 responses-medium    15.44s $0.00079 Bxf3  total $0.1977
+p016 responses-medium    77.39s $0.00352 Nc5  total $0.2012
+p018 responses-low        6.40s $0.00029 Qxb4  total $0.2015
+p015 responses-high     105.13s $0.00482 Bxd7+  total $0.2064
+p018 responses-none       1.33s $0.00009 Qxb4  total $0.2065
+p014 responses-high     194.92s $0.00973 Bxf3  total $0.2162
+p019 responses-none       1.23s $0.00007 Ne4  total $0.2163
+p017 responses-high      82.44s $0.00421 Bxf2+  total $0.2205
+p018 responses-medium    35.24s $0.00181 Re1  total $0.2223
+p019 responses-low       14.52s $0.00054 Bh7+  total $0.2228
+p020 responses-none       1.40s $0.00007 Qxc3  total $0.2229
+p020 responses-low       12.38s $0.00057 Nc4  total $0.2234
+p020 responses-medium    25.95s $0.00148 e5  total $0.2249
+p019 responses-medium    55.46s $0.00203 Qd1  total $0.2270
+p016 responses-high     141.72s $0.00744 Ke3  total $0.2344
+p018 responses-high      86.24s $0.00480 Re1  total $0.2392
+p021 responses-none       1.31s $0.00006 Qf7  total $0.2393
+p022 responses-none       1.94s $0.00006 Kc6  total $0.2393
+p021 responses-low       12.12s $0.00053 Qf7  total $0.2399
+p022 responses-low       11.28s $0.00042 a4  total $0.2403
+p022 responses-medium    10.96s $0.00059 a4  total $0.2409
+p023 responses-none       1.40s $0.00007 Bxb4  total $0.2409
+p023 responses-low       10.10s $0.00042 Bc7  total $0.2414
+p021 responses-medium    66.04s $0.00334 Qd6  total $0.2447
+p023 responses-medium    29.64s $0.00133 Bxf3  total $0.2460
+p022 responses-high      66.33s $0.00334 Kc5  total $0.2494
+p024 responses-low       14.40s $0.00055 b3  total $0.2499
+p024 responses-medium    27.21s $0.00115 b3  total $0.2511
+p024 responses-none       1.44s $0.00005 Nc3  total $0.2511
+p025 responses-low       10.29s $0.00037 Bxc6  total $0.2515
+p025 responses-none       1.39s $0.00006 Rxc6  total $0.2515
+p020 responses-high     124.82s $0.00643 Nc4  total $0.2580
+p023 responses-high      48.30s $0.00195 Bxf3  total $0.2599
+p025 responses-medium    14.67s $0.00075 Bxc6  total $0.2607
+p025 responses-high      17.52s $0.00090 Rxc6  total $0.2616
+p019 responses-high     185.53s $0.00798 Bh7+  total $0.2696
+p026 responses-low       13.22s $0.00052 c3  total $0.2701
+p026 responses-none       1.57s $0.00007 Nf6+  total $0.2702
+p027 responses-none       1.47s $0.00007 Rxe6  total $0.2702
+p021 responses-high     150.46s $0.00738 Qf8  total $0.2776
+p027 responses-low        6.45s $0.00030 Rxe6  total $0.2779
+p026 responses-medium    29.50s $0.00125 Rbd1  total $0.2792
+p028 responses-high      18.68s $0.00090 Qxa6  total $0.2801
+p027 responses-medium    26.92s $0.00123 Rxe6  total $0.2813
+p028 responses-none       1.38s $0.00007 Nxe4  total $0.2813
+p028 responses-low        6.47s $0.00030 Qxa6  total $0.2817
+p029 responses-low        6.99s $0.00027 gxf5  total $0.2819
+p029 responses-high       7.28s $0.00038 gxf5  total $0.2823
+p029 responses-none       1.19s $0.00007 gxf5  total $0.2824
+p028 responses-medium    15.73s $0.00068 Qxa6  total $0.2831
+p029 responses-medium     9.95s $0.00050 gxf5  total $0.2836
+p027 responses-high      42.04s $0.00231 Rxe6  total $0.2859
+p026 responses-high     124.88s $0.00642 Rxb7  total $0.2923
+p024 responses-high     160.56s $0.00831 b3  total $0.3006
+graded 200 positions at depth 16 in 175s
+# P0 probe results
+
+Model `gpt-6-luna`. Positions are 1200 to 2200 rated Lichess blitz games from January 2013. Loss is the drop in win probability (percentage points) against Stockfish 19's best move at depth 16. Latency is wall clock per call from this machine, after warm-up, with up to 6 Responses calls and 6 Decisions calls in flight.
+
+## All 200 positions
+
+| Rung | n | Errors | Mean loss | Median loss | Best move | Good (<5) | Blunder (>=30) | p50 s | p90 s | Reasoning tok | $/call |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| decisions-fen | 200 | 0 | 25.4 | 15.6 | 8% | 36% | 38% | 0.19 | 0.39 | 0 | 0.00005 |
+| decisions-rich | 200 | 0 | 19.5 | 6.4 | 16% | 46% | 26% | 0.20 | 0.44 | 0 | 0.00007 |
+| human | 200 | 0 | 4.8 | 0.4 | 35% | 75% | 3% | | | | |
+| random | 596 | 0 | 22.1 | 11.2 | 5% | 36% | 32% | | | | |
+
+## First 30 positions, every rung
+
+| Rung | n | Errors | Mean loss | Median loss | Best move | Good (<5) | Blunder (>=30) | p50 s | p90 s | Reasoning tok | $/call |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| decisions-rich | 30 | 0 | 17.8 | 5.2 | 10% | 50% | 30% | 0.19 | 0.34 | 0 | 0.00007 |
+| responses-none | 30 | 0 | 20.5 | 3.5 | 20% | 57% | 33% | 1.43 | 1.70 | 0 | 0.00007 |
+| responses-low | 30 | 0 | 12.5 | 1.3 | 30% | 70% | 10% | 10.76 | 14.59 | 759 | 0.00045 |
+| responses-medium | 30 | 0 | 7.6 | 0.3 | 37% | 77% | 7% | 28.31 | 77.39 | 3081 | 0.00161 |
+| responses-high | 30 | 0 | 4.5 | 0.3 | 33% | 83% | 7% | 95.07 | 185.53 | 9171 | 0.00465 |
+| responses-xhigh | 9 | 1 | 1.2 | 0.0 | 22% | 100% | 0% | 162.76 | 252.87 | 12540 | 0.00634 |
+| human | 30 | 0 | 2.4 | 0.0 | 47% | 83% | 0% | | | | |
+| random | 88 | 0 | 21.1 | 9.0 | 6% | 41% | 32% | | | | |
+
+## Calibration of `decisions-fen` top-move probability
+
+| p_top bin | n | Mean p_top | Is best move | Good (<5) |
+|---|---|---|---|---|
+| 0.0 to 0.2 | 168 | 0.11 | 5% | 29% |
+| 0.2 to 0.4 | 21 | 0.27 | 19% | 71% |
+| 0.4 to 0.6 | 8 | 0.49 | 12% | 62% |
+| 0.6 to 0.8 | 2 | 0.70 | 0% | 100% |
+| 0.8 to 1.0 | 1 | 0.84 | 100% | 100% |
+
+Spearman correlation of p_top with loss: -0.29 (negative means confident moves lose less).
+Spearman correlation of the sharpness score with Stockfish's best-vs-second gap: +0.04.
+
+## Calibration of `decisions-rich` top-move probability
+
+| p_top bin | n | Mean p_top | Is best move | Good (<5) |
+|---|---|---|---|---|
+| 0.0 to 0.2 | 144 | 0.11 | 12% | 39% |
+| 0.2 to 0.4 | 34 | 0.26 | 15% | 47% |
+| 0.4 to 0.6 | 13 | 0.48 | 54% | 92% |
+| 0.6 to 0.8 | 5 | 0.69 | 20% | 80% |
+| 0.8 to 1.0 | 4 | 0.85 | 25% | 100% |
+
+Spearman correlation of p_top with loss: -0.26 (negative means confident moves lose less).
+Spearman correlation of the sharpness score with Stockfish's best-vs-second gap: +0.14.
+
+Total API spend recorded: $0.3006 over 530 logged calls, 1 with errors.
+Raw logged spend, including superseded retries: $0.3006.
+
+exit 0
