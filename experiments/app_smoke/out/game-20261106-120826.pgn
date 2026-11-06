@@ -1,0 +1,9 @@
+[Event "zeitnot smoke 10+5"]
+[Site "?"]
+[Date "????.??.??"]
+[Round "?"]
+[White "gemini-3.6-flash + harness"]
+[Black "Stockfish UCI_Elo 1500"]
+[Result "0-1"]
+
+1. e4 c6 2. d4 e6 3. Nf3 d5 4. Nc3 Bb4 5. Bd3 Bxc3+ 6. bxc3 Nd7 7. e5 Ne7 8. Ng5 c5 9. Qg4 h6 10. Nxf7 Kxf7 11. Qg5 hxg5 12. c4 cxd4 13. Bxg5 Ke8 14. Bg6+ Nxg6 15. Bxd8 Ndxe5 16. Bg5 Kd7 17. cxd5 exd5 18. O-O Nc4 19. c3 Kc6 20. cxd4 Nf8 21. Rae1 Ne6 22. Be3 a5 23. Bc1 Bd7 24. f4 Rhe8 25. f5 Nxd4 26. Bh6 Nf3+ 27. Kf2 Nxh2 28. Bxg7 Nxf1 29. Bb2 Nfe3 30. Bd4 Bxf5 31. Bb2 Nf1 32. Bc1 Rxe1 33. Bh6 Ree8 34. Kf3 Re3+ 35. Bxe3 Nfxe3 36. Kf2 Be4 37. Kg1 Rg8 38. Kf2 Bf5 39. Kf3 Rxg2 40. Kf4 Rg4+ 41. Kf3 Rg2 42. Kf4 Rg8 43. Kf3 Be4+ 44. Kf2 Rg5 45. Ke1 Rg8 46. Kf2 d4 47. Ke1 d3 48. Kf2 Rg4 49. Ke1 Rg3 50. Kf2 Rg7 51. Ke1 Rg4 52. Kf2 d2 53. Ke2 Rg2# 0-1
