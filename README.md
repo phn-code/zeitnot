@@ -2,7 +2,9 @@
 
 Play chess against an LLM that decides when to think, and watch it reason while it plays.
 
-![An earlier version playing as Black in the Italian Game. The squares and moves the model names glow on the board, and a dashed arrow shows its backup move.](docs/images/thinking.png)
+![Claude Opus on a hard position at 10+5: a high main call and an xhigh second opinion disagree, each move is tested against the opponent's best reply, and a pick decides.](docs/media/demo.gif)
+
+**[Watch the one-minute demo (MP4)](docs/media/zeitnot-demo.mp4)**: a real 10+5 game against Claude Opus, from the opening to a hard middlegame where an `xhigh` second opinion disagrees with the main call.
 
 zeitnot is a local browser app. You pick a time control and play Claude Opus or Codex Sol through the command-line tools you are already logged in to. A harness sits between the clock and the model. On every move, it decides how hard the position is, how long the model may think, and whether to ask for a second opinion. The model's commentary streams beside the board, and the board shows where it is looking. *Zeitnot* is the chess word for time trouble.
 
@@ -51,7 +53,7 @@ Gemini Flash is still available as a paid opponent. Set `ZEITNOT_GEMINI=1` and a
 - **The game.** Click or drag moves, with legal-move dots, a check glow, a promotion picker and gliding pieces. Clocks run with increments. The history lists both sides' moves with the time each took: the model's rows show the level, the calls and a "hard" or "prepared" tag, and expand to replay the call tree and decision. The end card shows both sides' think time, how many of the model's moves were hard, the levels used and how many prepared moves played at once. The UI shows no prices.
 - **Three themes and recorded sounds.** Paper, Slate and Night. The move, capture and check sounds are recorded CC0 samples with slight variation per play.
 
-![The Night theme](docs/images/night.png)
+![A hard position mid-decision. Arrows show the candidate moves each call is weighing, the squares the model names glow, and the cards show the main call, the xhigh second opinion, the reply call that tested Ne4, and the pick explaining its choice.](docs/images/hard-move.png)
 
 ## How the harness decides
 

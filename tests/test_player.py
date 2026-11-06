@@ -117,6 +117,7 @@ async def test_main_error_without_a_backup_asks_the_model_again(settings, ledger
     assert (move.san, move.source) == ("e4", "model")
     assert "asking the model again (attempt 2 of 3)" in notes(events)
     assert engine.attempts["main"] == 2
+    assert final(events).elapsed_ms >= 1_000, "a moment's pause first: a CLI mid-update needs it"
 
 
 async def test_a_main_call_that_keeps_failing_ends_in_an_error_not_a_move(settings, ledger):

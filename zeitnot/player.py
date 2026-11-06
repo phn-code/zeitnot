@@ -32,6 +32,9 @@ if TYPE_CHECKING:
     from .ponder import Ponderer
 
 MAX_MAIN_ATTEMPTS = 3
+# Seconds before attempt 2, then attempt 3. A failure can be momentary: the Claude CLI briefly disappears while it
+# auto-updates itself, and three instant attempts once lost a game to that.
+RETRY_DELAYS_S = (1.0, 2.0)
 SECOND = Spec("second_opinion", "Second opinion · most forcing", "most forcing")
 BACKUP = Spec("backup", "Backup · safe moves only", "safe moves")
 
@@ -254,6 +257,11 @@ async def _main_and_backup(board: chess.Board, engine: Engine, situation: Situat
             return
         attempts += 1
         yield NoteEvent(f"asking the model again (attempt {attempts} of {MAX_MAIN_ATTEMPTS})")
+        resume_at = time.monotonic() + RETRY_DELAYS_S[attempts - 2]
+        async for event in calls.until(lambda: False, resume_at, note=False):  # other calls keep streaming meanwhile
+            yield event
+        if (left := resume_at - time.monotonic()) > 0:
+            await asyncio.sleep(left)
         calls.start("main", engine, main_call, every, replace(MAIN, label=f"Main · attempt {attempts}"))
 
 
