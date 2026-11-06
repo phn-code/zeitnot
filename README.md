@@ -4,7 +4,7 @@ Play chess against an LLM that decides when to think, and watch it reason while 
 
 ![Claude Opus on a hard position at 10+5: a high main call and an xhigh second opinion disagree, each move is tested against the opponent's best reply, and a pick decides.](docs/media/demo.gif)
 
-**[Watch the one-minute demo (MP4)](docs/media/zeitnot-demo.mp4)**: a real 10+5 game against Claude Opus, from the opening to a hard middlegame where an `xhigh` second opinion disagrees with the main call.
+**[Watch the 90-second demo (MP4)](docs/media/zeitnot-demo.mp4)**: real games against Claude Opus at 10+5 and 5+3. It covers the opening, a hard middlegame where an `xhigh` second opinion disagrees with the main call, replies prepared on your time, and a split settled by reply calls at a faster clock.
 
 zeitnot is a local browser app. You pick a time control and play Claude Opus or Codex Sol through the command-line tools you are already logged in to. A harness sits between the clock and the model. On every move, it decides how hard the position is, how long the model may think, and whether to ask for a second opinion. The model's commentary streams beside the board, and the board shows where it is looking. *Zeitnot* is the chess word for time trouble.
 
